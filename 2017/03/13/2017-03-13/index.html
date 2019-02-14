@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Farlanki">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Farlanki">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>漫谈Swift面向协议编程 · Farlanki</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Farlanki.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">漫谈Swift面向协议编程</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Farlanki.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            漫谈Swift面向协议编程
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.8k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/03/13</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>面向对象编程(OOP)自从在很久之前就已经成为了主流,相信每一个软件工程师都曾经或者正在使用着OOP编程.诚然,OOP为我们提供了很多很好的特性,例如封装,多态和继承等,让代码复用率更高,程序的解耦更加容易实现.但是,在随着软件的功能越来越多,需求越来越复杂,OOP的一些缺点已经被暴露了出来.</p>
+<h1 id="破立"><a href="#破立" class="headerlink" title="破立"></a>破立</h1><h2 id="OOP缺点一-结构复杂"><a href="#OOP缺点一-结构复杂" class="headerlink" title="OOP缺点一:结构复杂"></a>OOP缺点一:结构复杂</h2><p>很明显,OOP已经流行了很长的一段时间.在很多情况下,每当我们要实现一个新的需求,我们总会想到创建一个或几个新的类.这些类或许继承了之前已经存在的类,或者把之前存在的一些类的对象Wrap起来,从而使用它们的功能.然而这样做,很多情况下我们的类会继承到一些我们并用不到的功能.或者我们会不清楚到底应该把子类放在整个类结构的哪个位置.<br>考虑这个情况:</p>
+<p><img src="/2017/03/13/2017-03-13/13-18-21.jpg" alt=""><br>Android Phone,iOS Phone继承自mobile phone,S7继承自Android Phone,iPhone 7继承自iOS Phone.一切运作得良好,直到一天我们需要将Windows Phone纳入考虑.</p>
+<p><img src="/2017/03/13/2017-03-13/13-22-34.jpg" alt=""><br>只需要稍微将这个结构扩展一下,就可以达到这个需求.完全没有问题.<br>直到有一天,我们需要将平板电脑纳入考虑.</p>
+<p><img src="/2017/03/13/2017-03-13/13-25-30.jpg" alt=""><br>到底我们应该怎么设计这个结构呢?难道再设计一个mobile phone 和tablet的共同父类吗?那样会导致iOS中有部分代码破坏了don’t repeat yourself原则.把整个hierarchy的结构调整一下吗?</p>
+<p><img src="/2017/03/13/2017-03-13/~/13-34-48.jpg" alt=""><br>so far so good.直到有一天运行着Android的智能汽车出现了,整个hierarchy又不得不进行一番大改革.<br>OOP的一个很大的缺点就体现在这里,子类默认把父类中的属性和方法都全部继承下来,整个hierarchy十分严格,以至于需求出现一些变化我们就不得不对hierarchy进行调整.</p>
+<h2 id="OOP缺点二-隐式共享"><a href="#OOP缺点二-隐式共享" class="headerlink" title="OOP缺点二:隐式共享"></a>OOP缺点二:隐式共享</h2><p><img src="/2017/03/13/2017-03-13/00-56-55.jpg" alt=""><br>由于在Swift中类是引用类型的,所以当对象A被赋值给对象B的时候,实际上只是引用被复制到B.但是对象A和对象B都对对方毫不知情.所以,我们很容易写出经由对象A或者对象B改变底层数据的情况.实际上这样做完全符合直觉,但是却因为OOP的不足而造成了错误.</p>
+<h2 id="如果使用POP呢"><a href="#如果使用POP呢" class="headerlink" title="如果使用POP呢"></a>如果使用POP呢</h2><p><img src="/2017/03/13/2017-03-13/13-51-30.jpg" alt=""><br>当我们选择使用POP的时候,结构变成了这样子.有没有一种”扁平化”的感觉?和OOP中的继承不同,POP中强调的是”<code>组装</code>“.当新的需求来到,只需要把不用的协议组装在一起,就形成了一个新的实例.</p>
+<h3 id="哪里体现了多态性-协议类型"><a href="#哪里体现了多态性-协议类型" class="headerlink" title="哪里体现了多态性:协议类型"></a>哪里体现了多态性:协议类型</h3><p>有人可能认为:我们花了这么大力气尝试把各种不同的设备组合成一个层次分明的hierarchy,其中一个很重要的原因就是因为只需要这些子类有一个共同的一个父类,那么我们就可以使用OOP的多态性,对某个对象的方法进行动态决议,做到调用代码一致,但是运行结果因类而异的情况.简单的来说,就是让这些操作变成可能:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> deviceArray : [<span class="type">SmartProtableDevice</span>] = []</span><br><span class="line"></span><br><span class="line"><span class="comment">///add device to deviceArray</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> device <span class="keyword">in</span> deviceArray&#123;</span><br><span class="line">    device.reboot()<span class="comment">//假设SmartProtableDevice中实现了reboot方法.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在swift中,协议也体现了多态性.<br>先说点swift中的黑魔法.观察上面的图,我们发现这五种设备都没有一个公共的协议,怎么做到多态性呢?</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">RebootAble</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">reboot</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">iOSRunable</span></span>&#123;</span><br><span class="line">    <span class="comment">//some function</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">typealias</span> iOSWorkable = <span class="type">RebootAble</span> &amp; iOSRunable</span><br></pre></td></tr></table></figure>
+<p>首先,把iOSWorkable拆分成两个粒度更小的协议,Android和Windows也一样进行拆分(无论Android,Windows和iOS都必定可以重启哈哈).然后每种设备都遵循了<code>RebootAble</code>这个协议.<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> deviceArray : [<span class="type">RebootAble</span>] = []</span><br><span class="line"></span><br><span class="line"><span class="comment">///add device to deviceArray</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> device <span class="keyword">in</span> deviceArray&#123;</span><br><span class="line">    device.reboot()<span class="comment">//因为设备遵循RebootAble协议,所以拥有reboot方法.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这两段代码体现了两点:</p>
+<ol>
+<li>Swift中协议也是一种类型,依靠这点可以实现多态性</li>
+<li>Swift中协议可以很轻易的拆分成更多粒度更小的协议,而遵守这个协议的类可以对此毫不知情,一切改动只发生在协议的定义中.</li>
+</ol>
+<p><img src="/2017/03/13/2017-03-13/14-27-15.jpg" alt=""></p>
+<h2 id="另一个栗子"><a href="#另一个栗子" class="headerlink" title="另一个栗子"></a>另一个栗子</h2><p>举一个更实际的例子.假如现在需要实现一个独特的按钮类,需要按钮在被点击的时候执行两个效果:<br>1.按钮的边缘出现炫光.<br>2.按钮震动.<br>机制的程序员当然会从github上找答案.现在你找到了两个类:一个是继承自UIButton实现了边缘炫光的按钮类,另一个也是继承自UIButton但是实现了震动效果的按钮类.问题是:怎么才能将两种效果组合在一起呢?难道需要我们深入这两个类的源码,找到实现这两种效果的方法,然后在粘贴到我们自己实现的类中呢?还是先继承一个类,再把另一个类的方法复制过来?很明显,这两种实现方法都并不优雅.<br>但是,如果这两个库都使用了POP的话,那么我们就可以创建自己的一个类或者结构体,只需要将该类或者结构体实现了对应的协议,那么就可以拥有这两个效果了.</p>
+<h3 id="哪里体现了代码复用-protocol-extension"><a href="#哪里体现了代码复用-protocol-extension" class="headerlink" title="哪里体现了代码复用:protocol extension"></a>哪里体现了代码复用:protocol extension</h3><p>可能已经有读者意识到了一个问题:既然我们的类需要符合两个协议,那么我们便需要为这个类编写这两个协议中相应方法的实现,到头来实现部分还不是我干的吗?那究竟这两个库做了些什么?<br>Swift被称为世界上第一个面向协议编程的语言的强大之处就是它可以为协议提供扩展,协议的扩展可以提供具体方法的实现,体现了重用性.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">LightAble</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">light</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">ShakeAble</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">shake</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LightAble</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">light</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//implementation of light    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ShakeAble</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">shake</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//implementation of shake    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyButton</span> : <span class="title">UIButton</span> , <span class="title">LightAble</span> , <span class="title">ShakeAble</span></span>&#123;</span><br><span class="line">    <span class="comment">//call shake() and light() in a function        </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="利用POP优化identifier使用体验"><a href="#利用POP优化identifier使用体验" class="headerlink" title="利用POP优化identifier使用体验"></a>利用POP优化identifier使用体验</h1><p>在编写iOS App的时候我们不得不和各种identifier打交道,例如segue identifier 和 reuse identifier.这些identifier都是通过字符串传递的,使用的时候编译器并不知道我们传递的identifier究竟是否真的存在.或许我们的identifier存在一个拼写错误,那么就很容易导致应用程序崩溃.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line">    </span><br><span class="line">    <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">onRedPillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// I'm hard-coding my Red Pill segue identifier here 😬</span></span><br><span class="line">        performSegueWithIdentifier(<span class="string">"TheRedPillExperience"</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">onBluePillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// I'm hard-coding my Blue Pill segue identifier again here 😬</span></span><br><span class="line">        performSegueWithIdentifier(<span class="string">"TheBluePillExperience"</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>当然,我们可以在ViewController中声明一个枚举类型以储存identifier.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">SegueIdentifier</span>: <span class="title">String</span> </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheRedPillExperience</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheBluePillExperience</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">onRedPillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// so this is pretty long...</span></span><br><span class="line">        performSegueWithIdentifier(<span class="type">SegueIdentifier</span>.<span class="type">TheRedPillExperience</span>.rawValue, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">onBluePillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// and so is this...</span></span><br><span class="line">        performSegueWithIdentifier(<span class="type">SegueIdentifier</span>.<span class="type">TheBluePillExperience</span>.rawValue, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> identifier = segue.identifier,</span><br><span class="line">            segueIdentifier = <span class="type">SegueIdentifier</span>(rawValue: identifier) <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">fatalError</span>(<span class="string">"Invalid segue identifier \(segue.identifier)."</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">switch</span> segueIdentifier &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheRedPillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"😈"</span>)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheBluePillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"👼"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>很明显,如果我们有很多的ViewController,那么这部分代码是逃不过被重复的命运的了,很明显违背了don’t repeat原则,体现不了代码复用.一个优雅的方法是使用POP处理这些identifier.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">SegueHandlerType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">SegueIdentifier</span>: <span class="type">RawRepresentable</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">SegueHandlerType</span> <span class="title">where</span> <span class="title">Self</span>: <span class="title">UIViewController</span>,</span></span><br><span class="line"><span class="class">    <span class="title">SegueIdentifier</span>.<span class="title">RawValue</span> == <span class="title">String</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">performSegueWithIdentifier</span><span class="params">(segueIdentifier: SegueIdentifier,</span></span></span><br><span class="line"><span class="function"><span class="params">        sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        performSegueWithIdentifier(segueIdentifier.rawValue, sender: sender)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">segueIdentifierForSegue</span><span class="params">(segue: UIStoryboardSegue)</span></span> -&gt; <span class="type">SegueIdentifier</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// still have to use guard stuff here, but at least you're </span></span><br><span class="line">        <span class="comment">// extracting it this time    </span></span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> identifier = segue.identifier,</span><br><span class="line">            segueIdentifier = <span class="type">SegueIdentifier</span>(rawValue: identifier) <span class="keyword">else</span> &#123; </span><br><span class="line">                <span class="built_in">fatalError</span>(<span class="string">"Invalid segue identifier \(segue.identifier)."</span>) &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> segueIdentifier</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意这里运用了protocol extension以达到代码复用的目的.protocol要求遵循它的类定义一个遵循了<code>RawRepresentable</code>协议的SegueIdentifier.枚举类型的变量就是遵循<code>RawRepresentable</code>的变量.但是很明显不是每一个ViewController都需要遵循这个协议,于是利用了<code>where</code>关键字对范围进行了限制.<br>需要用到segue时,只需要简单调用</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span>, <span class="title">SegueHandlerType</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// the compiler will now complain if you don't have this implemented</span></span><br><span class="line">    <span class="comment">// you need this to conform to SegueHandlerType</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">SegueIdentifier</span>: <span class="title">String</span> </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheRedPillExperience</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheBluePillExperience</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 🎉 goodbye pyramid of doom!</span></span><br><span class="line">        <span class="keyword">switch</span> segueIdentifierForSegue(segue) &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheRedPillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"😈"</span>)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheBluePillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"👼"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">onRedPillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// ✅ this is how I want to write my code! Beautiful!</span></span><br><span class="line">        performSegueWithIdentifier(.<span class="type">TheRedPillExperience</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">onBluePillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        performSegueWithIdentifier(.<span class="type">TheBluePillExperience</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到,使用.Case这种方式就可以达到调用performSegueWithIdentifier的效果.这是因为<code>SegueHandlerType</code>这个协议为原本的performSegueWithIdentifier方法增加了一层抽象,告诉编译器performSegueWithIdentifier的第一个参数是<code>SegueIdentifier</code>类型的,在协议内部再调用系统的performSegueWithIdentifier方法.利用增加的一层,我们告诉了编译器更多信息,那么我们在真正写代码的时候,就可以写出更少的代码,让编译器为我们做更多的事.</p>
+<p>#关于性能<br>说了很多protocol的好处,难道它就没有缺点吗?并不是.Swift为了实现POP,使用了<code>协议类型</code>.就是协议类型为我们提供了多态性.<br>我们知道,被放入数组的数据结构需要有同样的大小.为实现这点,协议类型的模型其实是一个Wrapper:</p>
+<p><img src="/2017/03/13/2017-03-13/16-31-59.jpg" alt=""><br>pwt中记录着协议所规定方法的实现,valueBuffer中可以存放小于三个字节的数据.如果数据大于三个字节,那么valueBuffer存放的是指向这个数据结构的指针,指向堆.很明显,当使用协议类型的是引用类型,那么valueBuffer中存放的一定是指针.</p>
+<p><img src="/2017/03/13/2017-03-13/16-34-12.jpg" alt=""><br>是否使用协议类型,valueBuffer中存放的是否是对象本身对性能影响极大:</p>
+<p><img src="/2017/03/13/2017-03-13/16-37-46.jpg" alt=""></p>
+<p><img src="/2017/03/13/2017-03-13/16-38-12.jpg" alt=""></p>
+<p><img src="/2017/03/13/2017-03-13/16-38-28.jpg" alt=""><br>以上三种方式分别是不使用协议类型,使用协议类型并且数据存放在buffer中, 使用协议类型并且数据存放在堆中的例子,运行时间分别为0.3秒,4秒,45秒.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Swift的POP为我们打开了一道新世界的大门,POP为编程引入一种”组装”的思想.对比OOP,POP能在很多情况下为我们带来更简洁的hierachy.通过协议扩展和协议类型,Swift实现了面向协议的多态性和良好的代码复用原则.当然,协议类型在某些情况下会带来不小的性能问题,特别是在数据结构特别多的时候,所以在这种情况下应该谨慎的使用POP.</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://m.quzhiboapp.com/#!/intro/178" target="_blank" rel="noopener">如何开发一个流行的 Swift 开源动画库 - IBAnimatable</a><br><a href="http://m.quzhiboapp.com/#!/intro/253" target="_blank" rel="noopener">Swift 面向协议编程作者揭秘 Swift 世界的黑与白</a><br><a href="https://www.natashatherobot.com/protocol-oriented-segue-identifiers-swift/" target="_blank" rel="noopener">Protocol-Oriented Segue Identifiers in Swift</a><br><a href="http://comore.co/post/2016-07-28" target="_blank" rel="noopener">Swift代码性能优化</a></p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2017/03/22/2017-03-22/" title="总结一下让动画保持流畅的几个方法">
+                    <div class="nextTitle">总结一下让动画保持流畅的几个方法</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/02/09/2017-02-09/" title="iOS逆向工程之微信防撤回">
+                    <div class="prevTitle">iOS逆向工程之微信防撤回</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#破立"><span class="toc-number">2.</span> <span class="toc-text">破立</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OOP缺点一-结构复杂"><span class="toc-number">2.1.</span> <span class="toc-text">OOP缺点一:结构复杂</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OOP缺点二-隐式共享"><span class="toc-number">2.2.</span> <span class="toc-text">OOP缺点二:隐式共享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果使用POP呢"><span class="toc-number">2.3.</span> <span class="toc-text">如果使用POP呢</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#哪里体现了多态性-协议类型"><span class="toc-number">2.3.1.</span> <span class="toc-text">哪里体现了多态性:协议类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#另一个栗子"><span class="toc-number">2.4.</span> <span class="toc-text">另一个栗子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#哪里体现了代码复用-protocol-extension"><span class="toc-number">2.4.1.</span> <span class="toc-text">哪里体现了代码复用:protocol extension</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#利用POP优化identifier使用体验"><span class="toc-number">3.</span> <span class="toc-text">利用POP优化identifier使用体验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">4.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 78
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href="/2019/02/09/2019-02-09/">使用 Flutter 构建第一个应用后的一点感想</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span><a class="archive-post-title" href="/2018/09/16/2018-09-16/">Learn OpenGL第一章学习体会</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href="/2017/09/15/2018-09-15/">迁移一波博客</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href="/2017/07/04/2017-07-04/">Unix下关于套接字的一些细节</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href="/2017/07/02/2017-07-02/">使用Electron和JavaScript构建桌面应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href="/2017/04/17/2017-04-17/">iOS转场:神奇效果</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2017/03/22/2017-03-22/">总结一下让动画保持流畅的几个方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span><a class="archive-post-title" href="/2017/03/13/2017-03-13/">漫谈Swift面向协议编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href="/2017/02/09/2017-02-09/">iOS逆向工程之微信防撤回</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href="/2017/01/10/2017-01-10/">AsyncDisplayKit（一）初识</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href="/2016/12/14/2016-12-14/">Strong-Weak Dance</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href="/2016/08/05/2016-08-05/">Objective-C之分类</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href="/2016/08/04/2016-08-04/">掌上课堂性能优化历程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2016/07/28/2016-07-28/">Swift代码性能优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span><a class="archive-post-title" href="/2016/07/07/2016-07-07/">Advanced NSOperactions</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span><a class="archive-post-title" href="/2016/06/07/2016-06-07/">使用CADisplayLink观察动画</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href="/2016/06/06/2016-06-06/">YALContextMenu</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href="/2016/06/02/2016-06-02/">Swift的面向协议编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2016/05/05/2016-05-05/">gitignore已追踪文件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span><a class="archive-post-title" href="/2016/04/23/2016-04-23/">ViewController转场</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2016/04/20/2016-04-20/">学习DACircularProgress</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2016/04/19/2016-04-19/">学习SDWebImage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/30</span><a class="archive-post-title" href="/2016/03/30/2016-03-30/">学习ODRefreshControl</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href="/2016/02/29/2016-02-29-1/">使用AVCptureSession</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href="/2016/02/29/2016-02-29/">旋转UIImage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href="/2016/02/24/2016-02-24-1/">NSNotification</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href="/2016/02/24/2016-02-24/">UIPickerView</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/28</span><a class="archive-post-title" href="/2016/01/28/2016-01-28/">为iOS app注册支持文件类型</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href="/2016/01/27/2016-01-27/">关于block与copy关键字</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span><a class="archive-post-title" href="/2016/01/26/集成个rdp/">集成个rdp</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2015 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2015/12/30/2015-12-30/">UIScrollView实现图片轮播</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href="/2015/12/29/2015-12-29/">frame,bounds和center</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href="/2015/12/12/2015-12-12/">学习Core Data</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href="/2015/12/06/2015-12-06/">NSOperation和NSOperationQueue</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href="/2015/12/05/2015-12-05/">map,reduce和filter</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span><a class="archive-post-title" href="/2015/12/03/2015-12-03/">Pitaya</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2015/12/02/Objective-C中的@property/">Objective-C中的@property和@ synthesize</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href="/2015/12/01/使用replay/">‘使用ReplayKit’</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href="/2015/11/24/命令模式/">命令模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span><a class="archive-post-title" href="/2015/11/10/对象池/">对象池模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span><a class="archive-post-title" href="/2015/11/03/浅复制和深复制/">‘Swift中的浅复制和深复制’</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2015/11/01/swift之类型属性/">swift之类型属性</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href="/2015/10/18/swift 属性观察器/">swift 属性观察器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href="/2015/10/18/swift 2.0的错误处理/">swift 2.0的异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2015/10/10/2015-12-08/">(Objective-C)@property后的关键字</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span><a class="archive-post-title" href="/2015/10/07/swift/">swift中的指针</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2015/09/29/学习MVVM (一)/">[MVVM]学习MVVM (一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2015/08/17/[iOS]自定义cell作为section header/">[iOS]自定义cell作为section header</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href="/2015/08/15/apple/"> Apple Watch Human Interface Guidelines 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href="/2015/08/15/git常用指令/">git 常用指令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href="/2015/08/02/python 正则表达式/">python 正则表达式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span><a class="archive-post-title" href="/2015/06/07/单例模式/">单例模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/02</span><a class="archive-post-title" href="/2015/05/02/AVPlayer 后台播放/">AVPlayer 后台播放</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2015/04/26/UIImage encode/">UIImage encode的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2015/04/26/关于user/">关于userdefault返回值的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2015/04/19/自定义类加入userdefault/">自定义类加入userdefault</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href="/2015/04/16/Provisioning profile/">Provisioning profile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span><a class="archive-post-title" href="/2015/04/03/kvo初试/">KVO</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href="/2015/03/25/iosstreaming audio/">iOS的streaming audio</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2015/03/22/handleOpenURL与OPenURL/">handleOpenURL与OPenURL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2015/03/22/ui/">（转）UIApplication 总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span><a class="archive-post-title" href="/2015/03/19/读取网络文件/">读取网络文件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span><a class="archive-post-title" href="/2015/03/19/Apple Watch app和iOS的数据通信/">Apple Watch app和iOS的通信</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href="/2015/03/18/apple watch界面跳转/">apple watch界面导航</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href="/2015/03/18/关unable to find interface controller class '' to instantiate错误/">关于unable to find interface controller class ' to instantiate错误</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span><a class="archive-post-title" href="/2015/03/16/在Apple Watch里使用table/">在Apple Watch里使用table</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span><a class="archive-post-title" href="/2015/03/13/social framework与第三方share/">social framework与第三方shareSDK</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href="/2015/03/12/降低程序耦合度与代码复用/">降低程序耦合度与代码复用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href="/2015/03/11/add/">addSubview和delegate</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href="/2015/03/05/将有汉字的NSString转换为NSUrl/">将有汉字的NSString转换为NSUrl</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/04</span><a class="archive-post-title" href="/2015/03/04/UITableViewController setDataController：unrecognized selector sent to instance/">UITableViewController setDataController：unrecognized selector sent to instance</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span><a class="archive-post-title" href="/2015/03/03/gcd/">GCD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span><a class="archive-post-title" href="/2015/03/03/UitableView/">UitableView</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2014 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href="/2014/12/17/NSURLSession/">NSURLSession</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Farlanki"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

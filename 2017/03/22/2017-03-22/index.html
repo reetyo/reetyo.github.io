@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Farlanki">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Farlanki">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>总结一下让动画保持流畅的几个方法 · Farlanki</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Farlanki.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">总结一下让动画保持流畅的几个方法</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Farlanki.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            总结一下让动画保持流畅的几个方法
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.5k</span>阅读时长: <span class="post-count reading-time">8 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/03/22</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>动画的流畅性,是让iPhone俘虏广大果粉的心的一个重要的因素.但是我们在开发iOS APP的时候,却会经常遇到各种动画不能流畅表现的情况.下面将会介绍一些能让APP动画重回流畅的方法.</p>
+<h1 id="CPU和GPU-哪一块才是短板"><a href="#CPU和GPU-哪一块才是短板" class="headerlink" title="CPU和GPU,哪一块才是短板?"></a>CPU和GPU,哪一块才是短板?</h1><p>为了更好的实现动画的优化,我们首先需要了解一段动画在iOS中呈现需要经过哪些步骤.</p>
+<p><img src="/2017/03/22/2017-03-22/AKG.jpg" alt=""><br>从苹果在<a href="https://developer.apple.com/videos/play/wwdc2012/238/" target="_blank" rel="noopener">WWDC 2012</a>中展示的可以看出,一段动画从创建到展示需要经过三个主要的过程:</p>
+<ol>
+<li>创建动画并且更新动画层级</li>
+<li>准备并且提交动画</li>
+<li>渲染</li>
+</ol>
+<p>在这三个过程中,第一第二个过程是在<code>CPU</code>中被处理的,而第三个过程:渲染,则是由<code>GPU</code>所负责.所以,当我们需要优化动画的流畅性的时候,我们首先需要知道到底是CPU和GPU中的哪一个负担过重.关于如何使用instruments找出性能短板,请参考这篇文章:<a href="http://www.cocoachina.com/ios/20160208/15238.html?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="noopener">UIKit性能调优实战讲解</a>.</p>
+<h1 id="CPU-Bound"><a href="#CPU-Bound" class="headerlink" title="CPU Bound"></a>CPU Bound</h1><p>如果我们在在Time Profiler中发现一个方法的占用时间到达百分之90以上,那么这个方法很大可能是导致UI卡顿的罪魁祸首.在常见的应用中,我们在显示一些内容之前,CPU需要做的工作有以下几个:</p>
+<h2 id="一-布局"><a href="#一-布局" class="headerlink" title="一.布局"></a>一.布局</h2><p>布局即确定各个视图所处的位置,各个视图的大小等.另外,视图显示各种数据也在这个时候得到处理.</p>
+<ul>
+<li><code>AutoLayout</code>的布局在此时会被计算.虽然AutoLayout能让我们在设计应用的时候写更少的代码,但是手工计算各个视图的布局显然能让CPU的负担更少.在一些环境下,我们或许需要作出权衡.</li>
+<li><code>图片缓存</code>也可以减少CPU在布局时的工作.通常情况下,所有被设置为一个layer的content的<code>CGImage</code>会被系统自动缓存.但是一旦系统发出内存警告,这些缓存会被删除.可以考虑使用<code>SDWebImage</code>之类的库来制定更多自定义的缓存策略.</li>
+<li>重用view和cell.</li>
+</ul>
+<h2 id="二-显示"><a href="#二-显示" class="headerlink" title="二.显示"></a>二.显示</h2><p>这里的显示是指系统调用<code>UIView</code>的<code>-drawRect</code>方法或者<code>CALayerDelegate</code>的<code>-displayLayer:</code>方法.这些方法常用于实现画板或者各种形状各异的控件.无论是调用,<code>-drawRect</code>还是调用<code>-displayLayer:</code>,系统都会创建一个Backing Store,将我们想要的图案绘制到Backing Store中.</p>
+<p><img src="/2017/03/22/2017-03-22/E657BFE1-275F-49A7-904A-C61B7504C7E5.png" alt=""><br>Backing Store耗费的内存是巨大的,可以看看这篇文章:<a href="http://bihongbo.com/2016/01/03/memoryGhostdrawRect/" target="_blank" rel="noopener">内存恶鬼drawRect</a>.所以除非是在必要的情况下,我们不应该重载这些方法.针对显示这个步骤我们可以做的有:</p>
+<ul>
+<li>使用<code>CAShapeLayer</code>来绘制线条.</li>
+<li>不使用<code>[UIColor SetFill]</code>这类方法而使用<code>[UIView setBackgroundColor]</code>方法来设置背景颜色.</li>
+<li>如需使用<code>-drawRect</code>,使用<code>-setNeedsDisplayInRect:</code>来指定需要更新的部分而不是使用<code>-setNeedsDisplay</code>,这会导致整个layer被重新绘制.</li>
+</ul>
+<h2 id="三-准备"><a href="#三-准备" class="headerlink" title="三.准备"></a>三.准备</h2><p>在这一步中,系统对显示的图片进行转码操作.</p>
+<p><img src="/2017/03/22/2017-03-22/17-07-17.jpg" alt=""><br>当我们创建一个UIImageView时,系统不会立即为我们对该view指向的图片进行解码,而是当该view需要被展示的时候,在这一步对图片进行解码.以下几点可以让这一步的工作量更少:</p>
+<ul>
+<li>对于UI元素,使用<code>PNG</code>格式的图片.对于拖入Xcode的PNG图片,Xcode会对其进行优化.</li>
+<li>对于信息量大的图片例如照片,使用<code>JPEG</code>格式.</li>
+<li>使用尺寸恰当的图片</li>
+<li>尽可能使用不透明的图片</li>
+</ul>
+<h2 id="四-提交"><a href="#四-提交" class="headerlink" title="四.提交"></a>四.提交</h2><p>这一步CPU向GPU传递layers和参数.减少视图层级可以减少这一步的耗时.</p>
+<h1 id="GPU-Bound"><a href="#GPU-Bound" class="headerlink" title="GPU Bound"></a>GPU Bound</h1><p>当动画被提交之后,就到了GPU的工作时间.对于被传进来的动画,GPU需要在一秒之内将其渲染60次.所以如果任务过重,会导致GPU不能在1/60秒内完成该次渲染,导致掉帧.<br>减少GPU的工作负荷,我们可以从这几点着手.</p>
+<h2 id="减少离屏渲染"><a href="#减少离屏渲染" class="headerlink" title="减少离屏渲染"></a>减少离屏渲染</h2><p>减少离屏渲染.离屏渲染指的是GPU从当前的帧缓冲区之外的缓冲区进行绘制操作,然后切换环境回到当前缓冲区.离屏渲染对性能影响很大.常见会导致有离屏渲染问题的操作有:</p>
+<ul>
+<li>圆角+masking</li>
+<li>layer的阴影</li>
+</ul>
+<p>为了减少离屏渲染,可以使用一下的方法:</p>
+<ul>
+<li>把图片预先处理成圆形而不是用mask. </li>
+<li>使用shadowPath让GPU知道阴影的形状而不是在渲染时再计算阴影区域.</li>
+</ul>
+<h2 id="光栅化"><a href="#光栅化" class="headerlink" title="光栅化"></a>光栅化</h2><p>光栅化是指对当前layer和其所有sublayer通过bitmap形式缓存起来.使用光栅化的代码如下:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.layer.shouldRasterize = <span class="type">YES</span>;</span><br></pre></td></tr></table></figure></p>
+<p>之后如果再次需要展示该layer,则直接使用缓存起来的内容而不是重新渲染.但是,不是所有内容都适合光栅化.光栅化有以下几点需要注意的:</p>
+<ul>
+<li>可以光栅化的空间大小为屏幕的2.5倍</li>
+<li>当layer内容变化,缓存失效</li>
+<li>如果100ms没有使用到缓存,则会被清除</li>
+</ul>
+<p>因此,应用光栅化的layer应该具备以下条件:</p>
+<ul>
+<li>该layer层级复杂</li>
+<li>该layer实现的是简单的动画,即移动,变形,大小改变等.而sublayer不变.<br>另外需要注意的是，光栅化由CPU负责处理，使用光栅化会增加CPU的负担，所以需要做出权衡。</li>
+</ul>
+<h2 id="减少图层混合"><a href="#减少图层混合" class="headerlink" title="减少图层混合"></a>减少图层混合</h2><p>对于<code>isOpaque</code>为true的layer,系统会在渲染时进行优化,减少GPU的工作量.所以对于不透明的layer,将<code>isOpaque</code>设置为true.</p>
+<h1 id="Scrolling"><a href="#Scrolling" class="headerlink" title="Scrolling"></a>Scrolling</h1><p><code>Scrolling</code>动画极其常见,当我们使用tableView或者scrollView的时候我们都会和滚动动画打交道.滚动动画的实现形式和前面说的动画有点不同,这里针对Scrolling单独说说.</p>
+<p><img src="/2017/03/22/2017-03-22/20-25-43.jpg" alt=""><br>scrolling的每一帧之前都会需要CPU准备,而不像一般的动画那样一经CPU提交就能高枕无忧了.在每1/60秒的时间内,都需要经过上图所说的三个步骤,所以留给渲染的时间不是1/60秒,而是比1/60秒更短,准确来说,越短越好.针对Scrolling,除了上面所说的方法外,还有几个方法能提高Scrolling的体验.</p>
+<h2 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h2><p>如果我们在主线程中执行很多繁重的工作,那么这些工作就会有可能阻塞主线程进行UI响应.更好的办法是在另一条线程中处理这些繁重的工作,当这些工作完成后,通知主线程.对于tableView,我们可以实现:</p>
+<ul>
+<li>异步数据处理:把网络请求,数据库请求,数据下载等工作放在其他线程,等取得所需数据后再在主线程中更新view.</li>
+<li>异步绘图:把view的绘制放到其他线程.<code>-drawRect</code>只能在主线程中运行,所以我们不使用<code>-drawRect</code>.我们可以在其他线程中使用<code>UIGraphicsBeginImageContextWithOptions</code>新建一个绘图上下文,在这个上下文中绘制,而这些绘制可以在其他线程中执行.在绘制完成后,在主线程设置layer的content.而被设置成content的CGImage会被系统自动缓存,所以这些绘制工作不需要每次显示layer都调用.</li>
+</ul>
+<p>注意,因为tableView使用的cell是可重用的,而该cell可能已经被滑出屏幕,但是异步操作使得该cell仍然被设置了,那么当该cell需要展示另一组数据的时候,会有短暂的时间是显示之前的数据的.所以,我们应该在设置cell前使用<code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell</code>方法取得cell,而不是通过闭包的自动变量捕获来获得cell.使用<code>func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell</code>方法的好处是:当cell被滑出屏幕.该方法返回nil,那样我们就可以通过判断cell是否为nil来决定是否对cell进行操作.</p>
+<h2 id="取消处理"><a href="#取消处理" class="headerlink" title="取消处理"></a>取消处理</h2><p>使用异步处理会导致一个问题:当处理被提交到其他线程,而这些处理的结果已经不被需要的时候,就像用户滑动一个tableView,而tableView中的cell会被异步显示出来.但是用户滑过了这些cell,导致这些cell的内容不再需要被显示.这时就需要用到取消处理.如果我们使用<code>NSOperationQueue</code>提交任务的话,我们就可以取消提交了的但是还没执行的任务.例如:在用户打开一个展示一个tableView的view时,请求tableView展示的cell的数据并且进行异步绘制.在这些操作完成之前用户关闭了这个view,那么就可以调用<code>queue.cancelAllOperations()</code>.</p>
+<p>当一个cell被滑出屏幕的时候,系统会调用<code>UITableViewDelegate</code>的<code>tableView:didEndDisplayingCell:forRowAtIndexPath:</code>方法.我们可以在这里该cell对应的operation</p>
+<p>被取消的operation的isCancelled为true.当我们要执行一个operation之前,我们可以观察该属性,如果operation被取消了,提早退出.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在我们遇到动画不流畅的问题时,我们一定要先弄懂该问题是CPU负担过重还是GPU负担过重导致的,然后做出相应的改进.如果我们面对的是Scrolling动画,我们除了使用以上的方法之外,我们还应该尝试使用异步处理并且实现取消操作,保持滑动的流畅.</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://developer.apple.com/videos/play/wwdc2012/211/" target="_blank" rel="noopener">WWDC2012 Session 211 - Building Concurrent User Interfaces on iOS</a><br><a href="https://developer.apple.com/videos/play/wwdc2012/238/" target="_blank" rel="noopener">WWDC2012 Session 238 - iOS App Performance Graphics and Animation</a><br><a href="https://developer.apple.com/videos/play/wwdc2012/506/" target="_blank" rel="noopener">WWDC2012 Session 506 - Optimizing 2D Graphics and Animation Performance</a><br><a href="https://developer.apple.com/videos/play/wwdc2014/419/" target="_blank" rel="noopener">WWDC2014 Session 419 - Advanced Graphics and Animation Performance</a></p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2017/04/17/2017-04-17/" title="iOS转场:神奇效果">
+                    <div class="nextTitle">iOS转场:神奇效果</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/03/13/2017-03-13/" title="漫谈Swift面向协议编程">
+                    <div class="prevTitle">漫谈Swift面向协议编程</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CPU和GPU-哪一块才是短板"><span class="toc-number">2.</span> <span class="toc-text">CPU和GPU,哪一块才是短板?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CPU-Bound"><span class="toc-number">3.</span> <span class="toc-text">CPU Bound</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-布局"><span class="toc-number">3.1.</span> <span class="toc-text">一.布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-显示"><span class="toc-number">3.2.</span> <span class="toc-text">二.显示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-准备"><span class="toc-number">3.3.</span> <span class="toc-text">三.准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-提交"><span class="toc-number">3.4.</span> <span class="toc-text">四.提交</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GPU-Bound"><span class="toc-number">4.</span> <span class="toc-text">GPU Bound</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#减少离屏渲染"><span class="toc-number">4.1.</span> <span class="toc-text">减少离屏渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#光栅化"><span class="toc-number">4.2.</span> <span class="toc-text">光栅化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#减少图层混合"><span class="toc-number">4.3.</span> <span class="toc-text">减少图层混合</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Scrolling"><span class="toc-number">5.</span> <span class="toc-text">Scrolling</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异步处理"><span class="toc-number">5.1.</span> <span class="toc-text">异步处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#取消处理"><span class="toc-number">5.2.</span> <span class="toc-text">取消处理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">6.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 78
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href="/2019/02/09/2019-02-09/">使用 Flutter 构建第一个应用后的一点感想</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span><a class="archive-post-title" href="/2018/09/16/2018-09-16/">Learn OpenGL第一章学习体会</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href="/2017/09/15/2018-09-15/">迁移一波博客</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href="/2017/07/04/2017-07-04/">Unix下关于套接字的一些细节</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href="/2017/07/02/2017-07-02/">使用Electron和JavaScript构建桌面应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href="/2017/04/17/2017-04-17/">iOS转场:神奇效果</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2017/03/22/2017-03-22/">总结一下让动画保持流畅的几个方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span><a class="archive-post-title" href="/2017/03/13/2017-03-13/">漫谈Swift面向协议编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href="/2017/02/09/2017-02-09/">iOS逆向工程之微信防撤回</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href="/2017/01/10/2017-01-10/">AsyncDisplayKit（一）初识</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href="/2016/12/14/2016-12-14/">Strong-Weak Dance</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href="/2016/08/05/2016-08-05/">Objective-C之分类</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href="/2016/08/04/2016-08-04/">掌上课堂性能优化历程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2016/07/28/2016-07-28/">Swift代码性能优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span><a class="archive-post-title" href="/2016/07/07/2016-07-07/">Advanced NSOperactions</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span><a class="archive-post-title" href="/2016/06/07/2016-06-07/">使用CADisplayLink观察动画</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href="/2016/06/06/2016-06-06/">YALContextMenu</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href="/2016/06/02/2016-06-02/">Swift的面向协议编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2016/05/05/2016-05-05/">gitignore已追踪文件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span><a class="archive-post-title" href="/2016/04/23/2016-04-23/">ViewController转场</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2016/04/20/2016-04-20/">学习DACircularProgress</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2016/04/19/2016-04-19/">学习SDWebImage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/30</span><a class="archive-post-title" href="/2016/03/30/2016-03-30/">学习ODRefreshControl</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href="/2016/02/29/2016-02-29-1/">使用AVCptureSession</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href="/2016/02/29/2016-02-29/">旋转UIImage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href="/2016/02/24/2016-02-24-1/">NSNotification</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href="/2016/02/24/2016-02-24/">UIPickerView</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/28</span><a class="archive-post-title" href="/2016/01/28/2016-01-28/">为iOS app注册支持文件类型</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href="/2016/01/27/2016-01-27/">关于block与copy关键字</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span><a class="archive-post-title" href="/2016/01/26/集成个rdp/">集成个rdp</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2015 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2015/12/30/2015-12-30/">UIScrollView实现图片轮播</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href="/2015/12/29/2015-12-29/">frame,bounds和center</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href="/2015/12/12/2015-12-12/">学习Core Data</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href="/2015/12/06/2015-12-06/">NSOperation和NSOperationQueue</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href="/2015/12/05/2015-12-05/">map,reduce和filter</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span><a class="archive-post-title" href="/2015/12/03/2015-12-03/">Pitaya</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2015/12/02/Objective-C中的@property/">Objective-C中的@property和@ synthesize</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href="/2015/12/01/使用replay/">‘使用ReplayKit’</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href="/2015/11/24/命令模式/">命令模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span><a class="archive-post-title" href="/2015/11/10/对象池/">对象池模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span><a class="archive-post-title" href="/2015/11/03/浅复制和深复制/">‘Swift中的浅复制和深复制’</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2015/11/01/swift之类型属性/">swift之类型属性</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href="/2015/10/18/swift 属性观察器/">swift 属性观察器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href="/2015/10/18/swift 2.0的错误处理/">swift 2.0的异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2015/10/10/2015-12-08/">(Objective-C)@property后的关键字</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span><a class="archive-post-title" href="/2015/10/07/swift/">swift中的指针</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2015/09/29/学习MVVM (一)/">[MVVM]学习MVVM (一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2015/08/17/[iOS]自定义cell作为section header/">[iOS]自定义cell作为section header</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href="/2015/08/15/apple/"> Apple Watch Human Interface Guidelines 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href="/2015/08/15/git常用指令/">git 常用指令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href="/2015/08/02/python 正则表达式/">python 正则表达式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span><a class="archive-post-title" href="/2015/06/07/单例模式/">单例模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/02</span><a class="archive-post-title" href="/2015/05/02/AVPlayer 后台播放/">AVPlayer 后台播放</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2015/04/26/UIImage encode/">UIImage encode的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2015/04/26/关于user/">关于userdefault返回值的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2015/04/19/自定义类加入userdefault/">自定义类加入userdefault</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href="/2015/04/16/Provisioning profile/">Provisioning profile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span><a class="archive-post-title" href="/2015/04/03/kvo初试/">KVO</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href="/2015/03/25/iosstreaming audio/">iOS的streaming audio</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2015/03/22/handleOpenURL与OPenURL/">handleOpenURL与OPenURL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2015/03/22/ui/">（转）UIApplication 总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span><a class="archive-post-title" href="/2015/03/19/读取网络文件/">读取网络文件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span><a class="archive-post-title" href="/2015/03/19/Apple Watch app和iOS的数据通信/">Apple Watch app和iOS的通信</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href="/2015/03/18/apple watch界面跳转/">apple watch界面导航</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href="/2015/03/18/关unable to find interface controller class '' to instantiate错误/">关于unable to find interface controller class ' to instantiate错误</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span><a class="archive-post-title" href="/2015/03/16/在Apple Watch里使用table/">在Apple Watch里使用table</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span><a class="archive-post-title" href="/2015/03/13/social framework与第三方share/">social framework与第三方shareSDK</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href="/2015/03/12/降低程序耦合度与代码复用/">降低程序耦合度与代码复用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href="/2015/03/11/add/">addSubview和delegate</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href="/2015/03/05/将有汉字的NSString转换为NSUrl/">将有汉字的NSString转换为NSUrl</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/04</span><a class="archive-post-title" href="/2015/03/04/UITableViewController setDataController：unrecognized selector sent to instance/">UITableViewController setDataController：unrecognized selector sent to instance</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span><a class="archive-post-title" href="/2015/03/03/gcd/">GCD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span><a class="archive-post-title" href="/2015/03/03/UitableView/">UitableView</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2014 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href="/2014/12/17/NSURLSession/">NSURLSession</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Farlanki"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

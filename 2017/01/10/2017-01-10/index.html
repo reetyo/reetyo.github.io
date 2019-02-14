@@ -1,0 +1,2324 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Farlanki">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Farlanki">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>AsyncDisplayKit（一）初识 · Farlanki</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Farlanki.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">AsyncDisplayKit（一）初识</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Farlanki.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            AsyncDisplayKit（一）初识
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.7k</span>阅读时长: <span class="post-count reading-time">18 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/01/10</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="AsyncDisplayKit介绍"><a href="#AsyncDisplayKit介绍" class="headerlink" title="AsyncDisplayKit介绍"></a>AsyncDisplayKit介绍</h1><p><a href="&#39;http://asyncdisplaykit.org/&#39;">AsyncDisplayKit</a>的是Facebbook为了解决其App在某些机型上的性能问题而写的一个库。这个库使用ASNode把UIView再进行了封装，最大限度的保留开发者对于使用UIView的习惯。在UIView之上的ASNode是线程安全的，即使在后台线程使用ASNode也毫无问题。<br><img src="/2017/01/10/2017-01-10/asdknodeshow.jpg" alt=""><br>这篇文章分析的主要是ASNode的绘制流程。</p>
+<h1 id="关于CALayer的绘制时机"><a href="#关于CALayer的绘制时机" class="headerlink" title="关于CALayer的绘制时机"></a>关于CALayer的绘制时机</h1><p>在分析ASNode的绘制流程之前，我们先来了解一下一些关于<code>CALayer</code>的知识。当一个CALayer需要更新的时候，系统会先将其标记，在下一个更新周期调用其<code>-display（）</code>方法对其进行绘制。ASDK也参考了这个流程，其<code>_ASDisplayLayer</code>中的<code>-(void)display</code>方法可以作为我们分析ASNode的绘制流程的入口。</p>
+<h1 id="进入绘制流程"><a href="#进入绘制流程" class="headerlink" title="进入绘制流程"></a>进入绘制流程</h1><p>ASDisplayNode主要通过两个方式来进入绘制流程。</p>
+<ul>
+<li>当一个<code>ASDisplayNode</code>的<code>-setNeedsDisplay</code>方法被调用后。</li>
+<li><p>当一个node被作为参数通过<code>-addSubnode：</code>加入到parent view中时。实现在UIView（AsyncDisplayKit）中）。当一个node被加入到view中，实际上是node中的view被加入到parent view中。这时<code>-willMoveToWindow：</code>方法就被被调用。<br>上述两个流程最终都会调用<code>_ASDisplayLayer</code>的<code>-(void)display</code>方法。</p>
+<h2 id="void-display-BOOL-asynchronously"><a href="#void-display-BOOL-asynchronously" class="headerlink" title="(void)display:(BOOL)asynchronously"></a>(void)display:(BOOL)asynchronously</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> - (<span class="keyword">void</span>)display:(<span class="built_in">BOOL</span>)asynchronously</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">CGRectIsEmpty</span>(<span class="keyword">self</span>.bounds)) &#123;</span><br><span class="line">    _attemptedDisplayWhileZeroSized = <span class="literal">YES</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">id</span>&lt;_ASDisplayLayerDelegate&gt; <span class="built_in">NS_VALID_UNTIL_END_OF_SCOPE</span> strongAsyncDelegate;</span><br><span class="line">  &#123;</span><br><span class="line">    _asyncDelegateLock.lock();</span><br><span class="line">    strongAsyncDelegate = _asyncDelegate;</span><br><span class="line">    _asyncDelegateLock.unlock();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  [strongAsyncDelegate displayAsyncLayer:<span class="keyword">self</span> asynchronously:asynchronously];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>-(void)display:(BOOL)asynchronously</code>这个方法中调用了<code>_asyncDelegate</code>的<code>- (void)displayAsyncLayer:(_ASDisplayLayer *)asyncLayer asynchronously:(BOOL)asynchronously</code>方法。在ASDK的实现中，_ASDisplayLayer的_asyncDelegate为ASDisplayNode。</p>
+<h2 id="void-displayAsyncLayer-ASDisplayLayer-asyncLayer-asynchronously-BOOL-asynchronously"><a href="#void-displayAsyncLayer-ASDisplayLayer-asyncLayer-asynchronously-BOOL-asynchronously" class="headerlink" title="- (void)displayAsyncLayer:(_ASDisplayLayer *)asyncLayer asynchronously:(BOOL)asynchronously"></a>- (void)displayAsyncLayer:(_ASDisplayLayer *)asyncLayer asynchronously:(BOOL)asynchronously</h2><p>接下来进入<code>-displayAsyncLayer：asynchronously</code> </p>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)displayAsyncLayer:(_ASDisplayLayer *)asyncLayer asynchronously:(<span class="built_in">BOOL</span>)asynchronously</span><br><span class="line">&#123;</span><br><span class="line">  ASDisplayNodeAssertMainThread();</span><br><span class="line"></span><br><span class="line">  ASDN::MutexLocker l(__instanceLock__);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (_hierarchyState &amp; ASHierarchyStateRasterized) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// for async display, capture the current displaySentinel value to bail early when the job is executed if another is</span></span><br><span class="line">  <span class="comment">// enqueued</span></span><br><span class="line">  <span class="comment">// for sync display, do not support cancellation</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// <span class="doctag">FIXME:</span> what about the degenerate case where we are calling setNeedsDisplay faster than the jobs are dequeuing</span></span><br><span class="line">  <span class="comment">// from the displayQueue?  Need to not cancel early fails from displaySentinel changes.</span></span><br><span class="line">  asdisplaynode_iscancelled_block_t isCancelledBlock = <span class="literal">nil</span>;</span><br><span class="line">  <span class="keyword">if</span> (asynchronously) &#123;</span><br><span class="line">    uint displaySentinelValue = ++_displaySentinel;</span><br><span class="line">    __<span class="keyword">weak</span> ASDisplayNode *weakSelf = <span class="keyword">self</span>;</span><br><span class="line">    isCancelledBlock = ^<span class="built_in">BOOL</span>&#123;</span><br><span class="line">      __<span class="keyword">strong</span> ASDisplayNode *<span class="keyword">self</span> = weakSelf;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">self</span> == <span class="literal">nil</span> || (displaySentinelValue != <span class="keyword">self</span>-&gt;_displaySentinel.load());</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    isCancelledBlock = ^<span class="built_in">BOOL</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Set up displayBlock to call either display or draw on the delegate and return a UIImage contents</span></span><br><span class="line">  asyncdisplaykit_async_transaction_operation_block_t displayBlock = [<span class="keyword">self</span> _displayBlockWithAsynchronous:asynchronously isCancelledBlock:isCancelledBlock rasterizing:<span class="literal">NO</span>];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (!displayBlock) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  ASDisplayNodeAssert(_layer, <span class="string">@"Expect _layer to be not nil"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This block is called back on the main thread after rendering at the completion of the current async transaction, or immediately if !asynchronously</span></span><br><span class="line">  asyncdisplaykit_async_transaction_operation_completion_block_t completionBlock = ^(<span class="keyword">id</span>&lt;<span class="built_in">NSObject</span>&gt; value, <span class="built_in">BOOL</span> canceled)&#123;</span><br><span class="line">    ASDisplayNodeCAssertMainThread();</span><br><span class="line">    <span class="keyword">if</span> (!canceled &amp;&amp; !isCancelledBlock()) &#123;</span><br><span class="line">      <span class="built_in">UIImage</span> *image = (<span class="built_in">UIImage</span> *)value;</span><br><span class="line">      <span class="built_in">BOOL</span> stretchable = (<span class="literal">NO</span> == <span class="built_in">UIEdgeInsetsEqualToEdgeInsets</span>(image.capInsets, <span class="built_in">UIEdgeInsetsZero</span>));</span><br><span class="line">      <span class="keyword">if</span> (stretchable) &#123;</span><br><span class="line">        ASDisplayNodeSetupLayerContentsWithResizableImage(_layer, image);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _layer.contentsScale = <span class="keyword">self</span>.contentsScale;</span><br><span class="line">        _layer.contents = (<span class="keyword">id</span>)image.CGImage;</span><br><span class="line">      &#125;</span><br><span class="line">      [<span class="keyword">self</span> didDisplayAsyncLayer:<span class="keyword">self</span>.asyncLayer];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Call willDisplay immediately in either case</span></span><br><span class="line">  [<span class="keyword">self</span> willDisplayAsyncLayer:<span class="keyword">self</span>.asyncLayer asynchronously:asynchronously];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (asynchronously) &#123;</span><br><span class="line">    <span class="comment">// Async rendering operations are contained by a transaction, which allows them to proceed and concurrently</span></span><br><span class="line">    <span class="comment">// while synchronizing the final application of the results to the layer's contents property (completionBlock).</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// First, look to see if we are expected to join a parent's transaction container.</span></span><br><span class="line">    <span class="built_in">CALayer</span> *containerLayer = _layer.asyncdisplaykit_parentTransactionContainer ? : _layer;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// In the case that a transaction does not yet exist (such as for an individual node outside of a container),</span></span><br><span class="line">    <span class="comment">// this call will allocate the transaction and add it to _ASAsyncTransactionGroup.</span></span><br><span class="line">    <span class="comment">// It will automatically commit the transaction at the end of the runloop.</span></span><br><span class="line">    _ASAsyncTransaction *transaction = containerLayer.asyncdisplaykit_asyncTransaction;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Adding this displayBlock operation to the transaction will start it IMMEDIATELY.</span></span><br><span class="line">    <span class="comment">// The only function of the transaction commit is to gate the calling of the completionBlock.</span></span><br><span class="line">    [transaction addOperationWithBlock:displayBlock priority:<span class="keyword">self</span>.drawingPriority queue:[_ASDisplayLayer displayQueue] completion:completionBlock];</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">UIImage</span> *contents = (<span class="built_in">UIImage</span> *)displayBlock();</span><br><span class="line">    completionBlock(contents, <span class="literal">NO</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在来看一下这个方法都干了些啥。</p>
+<ul>
+<li>判断layer是否处于一个已经格栅化的层级中(是否有一个父node被设置了.shouldRasterizeDescendants)，如果是，则返回(因为格栅化要从被标记了格栅化的根node开始)</li>
+<li>构造isCancelBlock。</li>
+<li>构造调用方法displayBlock，isCancelBlock作为参数。</li>
+<li>如果方法返回nil，直接返回。（）</li>
+<li>构造completionBlock。</li>
+<li>从视图层次中最底端的layer中取得一个__ASAsyncTransaction。</li>
+<li>将构造completionBlock和displayBlock加入transaction中，并指定优先级和分发的队列（主队列）。</li>
+</ul>
+<p>其中，displayBlock负责的是将每个layer的content计算出来，而completionBlock的工作便是将计算出来的内容赋值到layer.content中。<br>现在来看看<code>构造displayBlock</code>的方法.</p>
+<h2 id="displayBlockWithAsynchronous-isCancelledBlock-rasterizing"><a href="#displayBlockWithAsynchronous-isCancelledBlock-rasterizing" class="headerlink" title="-_displayBlockWithAsynchronous:isCancelledBlock:rasterizing"></a>-_displayBlockWithAsynchronous:isCancelledBlock:rasterizing</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">asyncdisplaykit_async_transaction_operation_block_t displayBlock = <span class="literal">nil</span>;</span><br><span class="line">  ASDisplayNodeFlags flags;</span><br><span class="line">  </span><br><span class="line">  __instanceLock__.lock();</span><br><span class="line"></span><br><span class="line">  flags = _flags;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// We always create a graphics context, unless a -display method is used, OR if we are a subnode drawing into a rasterized parent.</span></span><br><span class="line">  <span class="built_in">BOOL</span> shouldCreateGraphicsContext = (flags.implementsInstanceImageDisplay == <span class="literal">NO</span> &amp;&amp; flags.implementsImageDisplay == <span class="literal">NO</span> &amp;&amp; rasterizing == <span class="literal">NO</span>);</span><br><span class="line">  <span class="built_in">BOOL</span> shouldBeginRasterizing = (rasterizing == <span class="literal">NO</span> &amp;&amp; flags.shouldRasterizeDescendants);</span><br><span class="line">  <span class="built_in">BOOL</span> usesInstanceMethodDisplay = (flags.implementsInstanceDrawRect || flags.implementsInstanceImageDisplay);</span><br><span class="line">  <span class="built_in">BOOL</span> usesImageDisplay = (flags.implementsImageDisplay || flags.implementsInstanceImageDisplay);</span><br><span class="line">  <span class="built_in">BOOL</span> usesDrawRect = (flags.implementsDrawRect || flags.implementsInstanceDrawRect);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (usesImageDisplay == <span class="literal">NO</span> &amp;&amp; usesDrawRect == <span class="literal">NO</span> &amp;&amp; shouldBeginRasterizing == <span class="literal">NO</span>) &#123;</span><br><span class="line">    <span class="comment">// Early exit before requesting more expensive properties like bounds and opaque from the layer.</span></span><br><span class="line">    __instanceLock__.unlock();</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">BOOL</span> opaque = <span class="keyword">self</span>.opaque;</span><br><span class="line">  <span class="built_in">CGRect</span> bounds = <span class="keyword">self</span>.bounds;</span><br><span class="line">  <span class="built_in">CGFloat</span> contentsScaleForDisplay = _contentsScaleForDisplay;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Capture drawParameters from delegate on main thread, if this node is displaying itself rather than recursively rasterizing.</span></span><br><span class="line">  <span class="keyword">id</span> drawParameters = (shouldBeginRasterizing == <span class="literal">NO</span> ? [<span class="keyword">self</span> drawParameters] : <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">  __instanceLock__.unlock();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Only the -display methods should be called if we can't size the graphics buffer to use.</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">CGRectIsEmpty</span>(bounds) &amp;&amp; (shouldBeginRasterizing || shouldCreateGraphicsContext)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  ASDisplayNodeAssert(contentsScaleForDisplay != <span class="number">0.0</span>, <span class="string">@"Invalid contents scale"</span>);</span><br><span class="line">  ASDisplayNodeAssert(usesInstanceMethodDisplay == <span class="literal">NO</span> || (flags.implementsDrawRect == <span class="literal">NO</span> &amp;&amp; flags.implementsImageDisplay == <span class="literal">NO</span>),</span><br><span class="line">                      <span class="string">@"Node %@ should not implement both class and instance method display or draw"</span>, <span class="keyword">self</span>);</span><br><span class="line">  ASDisplayNodeAssert(rasterizing || !(_hierarchyState &amp; ASHierarchyStateRasterized),</span><br><span class="line">                      <span class="string">@"Rasterized descendants should never display unless being drawn into the rasterized container."</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (shouldBeginRasterizing) &#123;</span><br><span class="line">    <span class="comment">// Collect displayBlocks for all descendants.</span></span><br><span class="line">    <span class="built_in">NSMutableArray</span> *displayBlocks = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line">    [<span class="keyword">self</span> _recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:isCancelledBlock displayBlocks:displayBlocks];</span><br><span class="line">    CHECK_CANCELLED_AND_RETURN_NIL();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// If [UIColor clearColor] or another semitransparent background color is used, include alpha channel when rasterizing.</span></span><br><span class="line">    <span class="comment">// Unlike CALayer drawing, we include the backgroundColor as a base during rasterization.</span></span><br><span class="line">    opaque = opaque &amp;&amp; <span class="built_in">CGColorGetAlpha</span>(<span class="keyword">self</span>.backgroundColor.CGColor) == <span class="number">1.0</span>f;</span><br><span class="line"></span><br><span class="line">    displayBlock = ^<span class="keyword">id</span>&#123;</span><br><span class="line">      CHECK_CANCELLED_AND_RETURN_NIL();</span><br><span class="line">      </span><br><span class="line">      <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(bounds.size, opaque, contentsScaleForDisplay);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">for</span> (dispatch_block_t block <span class="keyword">in</span> displayBlocks) &#123;</span><br><span class="line">        CHECK_CANCELLED_AND_RETURN_NIL(<span class="built_in">UIGraphicsEndImageContext</span>());</span><br><span class="line">        block();</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="built_in">UIImage</span> *image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">      <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line"></span><br><span class="line">      ASDN_DELAY_FOR_DISPLAY();</span><br><span class="line">      <span class="keyword">return</span> image;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    displayBlock = ^<span class="keyword">id</span>&#123;</span><br><span class="line">      CHECK_CANCELLED_AND_RETURN_NIL();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (shouldCreateGraphicsContext) &#123;</span><br><span class="line">        <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(bounds.size, opaque, contentsScaleForDisplay);</span><br><span class="line">        CHECK_CANCELLED_AND_RETURN_NIL( <span class="built_in">UIGraphicsEndImageContext</span>(); );</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="built_in">CGContextRef</span> currentContext = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">      <span class="built_in">UIImage</span> *image = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// For -display methods, we don't have a context, and thus will not call the _willDisplayNodeContentWithRenderingContext or</span></span><br><span class="line">      <span class="comment">// _didDisplayNodeContentWithRenderingContext blocks. It's up to the implementation of -display... to do what it needs.</span></span><br><span class="line">      <span class="keyword">if</span> (currentContext &amp;&amp; _willDisplayNodeContentWithRenderingContext) &#123;</span><br><span class="line">        _willDisplayNodeContentWithRenderingContext(currentContext);</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Decide if we use a class or instance method to draw or display.</span></span><br><span class="line">      <span class="keyword">id</span> object = usesInstanceMethodDisplay ? <span class="keyword">self</span> : [<span class="keyword">self</span> <span class="keyword">class</span>];</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (usesImageDisplay) &#123;                                   <span class="comment">// If we are using a display method, we'll get an image back directly.</span></span><br><span class="line">        image = [object displayWithParameters:drawParameters</span><br><span class="line">                                  isCancelled:isCancelledBlock];</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (usesDrawRect) &#123;                                <span class="comment">// If we're using a draw method, this will operate on the currentContext.</span></span><br><span class="line">        [object drawRect:bounds withParameters:drawParameters</span><br><span class="line">             isCancelled:isCancelledBlock isRasterizing:rasterizing];</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (currentContext &amp;&amp; _didDisplayNodeContentWithRenderingContext) &#123;</span><br><span class="line">        _didDisplayNodeContentWithRenderingContext(currentContext);</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (shouldCreateGraphicsContext) &#123;</span><br><span class="line">        CHECK_CANCELLED_AND_RETURN_NIL( <span class="built_in">UIGraphicsEndImageContext</span>(); );</span><br><span class="line">        image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">        <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      ASDN_DELAY_FOR_DISPLAY();</span><br><span class="line">      <span class="keyword">return</span> image;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>现在来看看这个方法又干了什么</p>
+<ul>
+<li>如果一个node没有实现<code>drawRect:withParameters:isCancelled:isRasterizing:</code>方法,没有实现<code>displayWithParameters:isCancelled:</code>方法和并不是需要光栅化的层级的根Node的话,返回.</li>
+<li>如果一个node的Rect为零的话,返回</li>
+<li>如果当前节点为视图层次结构的根节点并且被标记为<code>shouldRasterizeDescendants</code>的话<ul>
+<li>构造一个displayBlocks的数组,调用<code>-__recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:</code>的方法得到的block都存在这个数组中.</li>
+<li>构造一个displayBlock,负责遍历刚才得到的displayBlocks数组.取得全部block运行后得到的结果(一个UIImage),并返回这个image.</li>
+</ul>
+</li>
+<li>如果当前节点实现了上述的display方法或者draw 方法,那么新建一个displayBlock,负责调用这两个方法,最后返回一个UIImage对象.</li>
+</ul>
+<p>可以看到,这个方法主要是根据不用的情况构造diaplayBlock.node实现了<code>display</code>方法或者实现了<code>drawRect</code>方法的情况比较简单.下面主要来看看在光栅化的情况下<code>-__recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:</code>方法做了些什么.</p>
+<h2 id="recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock-displayBlocks"><a href="#recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock-displayBlocks" class="headerlink" title="-__recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:"></a><code>-__recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:</code></h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)_recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:(asdisplaynode_iscancelled_block_t)isCancelledBlock displayBlocks:(<span class="built_in">NSMutableArray</span> *)displayBlocks</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Skip subtrees that are hidden or zero alpha.</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">self</span>.isHidden || <span class="keyword">self</span>.alpha &lt;= <span class="number">0.0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="built_in">BOOL</span> rasterizingFromAscendent = (_hierarchyState &amp; ASHierarchyStateRasterized);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// if super node is rasterizing descendants, subnodes will not have had layout calls because they don't have layers</span></span><br><span class="line">  <span class="keyword">if</span> (rasterizingFromAscendent) &#123;</span><br><span class="line">    [<span class="keyword">self</span> __layout];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Capture these outside the display block so they are retained.</span></span><br><span class="line">  <span class="built_in">UIColor</span> *backgroundColor = <span class="keyword">self</span>.backgroundColor;</span><br><span class="line">  <span class="built_in">CGRect</span> bounds = <span class="keyword">self</span>.bounds;</span><br><span class="line">  <span class="built_in">CGFloat</span> cornerRadius = <span class="keyword">self</span>.cornerRadius;</span><br><span class="line">  <span class="built_in">BOOL</span> clipsToBounds = <span class="keyword">self</span>.clipsToBounds;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">CGRect</span> frame;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// If this is the root container node, use a frame with a zero origin to draw into. If not, calculate the correct frame using the node's position, transform and anchorPoint.</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">self</span>.shouldRasterizeDescendants) &#123;</span><br><span class="line">    frame = <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>f, <span class="number">0.0</span>f, bounds.size.width, bounds.size.height);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> position = <span class="keyword">self</span>.position;</span><br><span class="line">    <span class="built_in">CGPoint</span> anchorPoint = <span class="keyword">self</span>.anchorPoint;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Pretty hacky since full 3D transforms aren't actually supported, but attempt to compute the transformed frame of this node so that we can composite it into approximately the right spot.</span></span><br><span class="line">    <span class="built_in">CGAffineTransform</span> transform = <span class="built_in">CATransform3DGetAffineTransform</span>(<span class="keyword">self</span>.transform);</span><br><span class="line">    <span class="built_in">CGSize</span> scaledBoundsSize = <span class="built_in">CGSizeApplyAffineTransform</span>(bounds.size, transform);</span><br><span class="line">    <span class="built_in">CGPoint</span> origin = <span class="built_in">CGPointMake</span>(position.x - scaledBoundsSize.width * anchorPoint.x,</span><br><span class="line">                                 position.y - scaledBoundsSize.height * anchorPoint.y);</span><br><span class="line">    frame = <span class="built_in">CGRectMake</span>(origin.x, origin.y, bounds.size.width, bounds.size.height);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get the display block for this node.</span></span><br><span class="line">  asyncdisplaykit_async_transaction_operation_block_t displayBlock = [<span class="keyword">self</span> _displayBlockWithAsynchronous:<span class="literal">NO</span> isCancelledBlock:isCancelledBlock rasterizing:<span class="literal">YES</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// We'll display something if there is a display block, clipping, translation and/or a background color.</span></span><br><span class="line">  <span class="built_in">BOOL</span> shouldDisplay = displayBlock || backgroundColor || <span class="built_in">CGPointEqualToPoint</span>(<span class="built_in">CGPointZero</span>, frame.origin) == <span class="literal">NO</span> || clipsToBounds;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// If we should display, then push a transform, draw the background color, and draw the contents.</span></span><br><span class="line">  <span class="comment">// The transform is popped in a block added after the recursion into subnodes.</span></span><br><span class="line">  <span class="keyword">if</span> (shouldDisplay) &#123;</span><br><span class="line">    dispatch_block_t pushAndDisplayBlock = ^&#123;</span><br><span class="line">      <span class="comment">// Push transform relative to parent.</span></span><br><span class="line">      <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">      <span class="built_in">CGContextSaveGState</span>(context);</span><br><span class="line"></span><br><span class="line">      <span class="built_in">CGContextTranslateCTM</span>(context, frame.origin.x, frame.origin.y);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//support cornerRadius</span></span><br><span class="line">      <span class="keyword">if</span> (rasterizingFromAscendent &amp;&amp; clipsToBounds) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cornerRadius) &#123;</span><br><span class="line">          [[<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:bounds cornerRadius:cornerRadius] addClip];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">CGContextClipToRect</span>(context, bounds);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Fill background if any.</span></span><br><span class="line">      <span class="built_in">CGColorRef</span> backgroundCGColor = backgroundColor.CGColor;</span><br><span class="line">      <span class="keyword">if</span> (backgroundColor &amp;&amp; <span class="built_in">CGColorGetAlpha</span>(backgroundCGColor) &gt; <span class="number">0.0</span>) &#123;</span><br><span class="line">        <span class="built_in">CGContextSetFillColorWithColor</span>(context, backgroundCGColor);</span><br><span class="line">        <span class="built_in">CGContextFillRect</span>(context, bounds);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// If there is a display block, call it to get the image, then copy the image into the current context (which is the rasterized container's backing store).</span></span><br><span class="line">      <span class="keyword">if</span> (displayBlock) &#123;</span><br><span class="line">        <span class="built_in">UIImage</span> *image = (<span class="built_in">UIImage</span> *)displayBlock();</span><br><span class="line">        <span class="keyword">if</span> (image) &#123;</span><br><span class="line">          <span class="built_in">BOOL</span> opaque = ASImageAlphaInfoIsOpaque(<span class="built_in">CGImageGetAlphaInfo</span>(image.CGImage));</span><br><span class="line">          <span class="built_in">CGBlendMode</span> blendMode = opaque ? kCGBlendModeCopy : kCGBlendModeNormal;</span><br><span class="line">          [image drawInRect:bounds blendMode:blendMode alpha:<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    [displayBlocks addObject:pushAndDisplayBlock];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Recursively capture displayBlocks for all descendants.</span></span><br><span class="line">  <span class="keyword">for</span> (ASDisplayNode *subnode <span class="keyword">in</span> <span class="keyword">self</span>.subnodes) &#123;</span><br><span class="line">    [subnode _recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:isCancelledBlock displayBlocks:displayBlocks];</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>下面来看看这个方法做了些什么</p>
+<ul>
+<li>如果不是根node,先进行仿射变换,符合设置的bounds.</li>
+<li>再次调用<code>_displayBlockWithAsynchronous:isCancelledBlock:rasterizing:</code>取得displayBlock.注意这次调用此方法和上次调用的方法不同,rasterizing被设置成了yes.这样,当调用<code>_displayBlockWithAsynchronous:isCancelledBlock:rasterizing:</code>方法的时候,不会再进入这个方法,而是直接取得调用<code>display</code>方法或者<code>drawRect</code>方法的displayBlock.</li>
+<li>将取得的displayBlock封装成<code>pushAndDisplayBlock</code>,这个block负责调用displayBlock,在context中绘制图片.</li>
+<li>将<code>pushAndDisplayBlock</code>加入数组.</li>
+<li>对每个子节点调用<code>_recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:</code>.这样其实是进行递归调用.当子节点调用<code>_recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:</code>时,会再回到<code>-_displayBlockWithAsynchronous:isCancelledBlock:rasterizing</code>,取得调用<code>display</code>或者<code>drawRect</code>方法的displayBlock,再取得<code>pushAndDisplayBlock</code>,加入数组</li>
+</ul>
+<p>总结:这个方法其实是取得一系列可以在context中将本layer中的内容画出来的block.当这个方法调用完毕后,根node将会取得一个block数组,遍历这个数组,就可以在context中把以其为根节点的整个视图层级的内容绘制出来,返回一个UIImage.</p>
+<p><img src="/2017/01/10/2017-01-10/A.png" alt=""></p>
+<h2 id="void-addOperationWithBlock-priority-queue-completion"><a href="#void-addOperationWithBlock-priority-queue-completion" class="headerlink" title="- (void)addOperationWithBlock:priority:queue:completion:"></a>- (void)addOperationWithBlock:priority:queue:completion:</h2><p>在displayBlock和completion构造完成后,就要看看到底什么时候调用displayBlock和completion了.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)addOperationWithBlock:(asyncdisplaykit_async_transaction_operation_block_t)block</span><br><span class="line">                     priority:(<span class="built_in">NSInteger</span>)priority</span><br><span class="line">                        queue:(<span class="built_in">dispatch_queue_t</span>)queue</span><br><span class="line">                   completion:(asyncdisplaykit_async_transaction_operation_completion_block_t)completion</span><br><span class="line">&#123;</span><br><span class="line">  ASAsyncTransactionAssertMainThread();</span><br><span class="line">  <span class="built_in">NSAssert</span>(<span class="keyword">self</span>.state == ASAsyncTransactionStateOpen, <span class="string">@"You can only add operations to open transactions"</span>);</span><br><span class="line"></span><br><span class="line">  [<span class="keyword">self</span> _ensureTransactionData];</span><br><span class="line"></span><br><span class="line">  ASAsyncTransactionOperation *operation = [[ASAsyncTransactionOperation alloc] initWithOperationCompletionBlock:completion];</span><br><span class="line">  [_operations addObject:operation];</span><br><span class="line">  _group-&gt;schedule(priority, queue, ^&#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">self</span>.state != ASAsyncTransactionStateCanceled) &#123;</span><br><span class="line">        operation.value = block();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先看看_ASAsyncTransaction的结构是怎样的:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">_ASAsyncTransaction</span></span></span><br><span class="line">&#123;</span><br><span class="line">  ASAsyncTransactionQueue::Group *_group;</span><br><span class="line">  <span class="built_in">NSMutableArray</span>&lt;ASAsyncTransactionOperation *&gt; *_operations;</span><br><span class="line">  _Atomic(ASAsyncTransactionState) _state;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法做了以下几件事:</p>
+<ul>
+<li>以completion为参数构造<code>ASAsyncTransactionOperation</code>加入到<code>_ASAsyncTransaction</code>对象的<code>_operations</code>数组中.</li>
+<li>构造一个执行display的block,将结果存放在ASAsyncTransactionOperation的value中.group中调度该block.</li>
+</ul>
+<p>接下来看看_group的schedule究竟是怎样操作的</p>
+<h2 id="void-ASAsyncTransactionQueue-GroupImpl-schedule-NSInteger-priority-dispatch-queue-t-queue-dispatch-block-t-block"><a href="#void-ASAsyncTransactionQueue-GroupImpl-schedule-NSInteger-priority-dispatch-queue-t-queue-dispatch-block-t-block" class="headerlink" title="void ASAsyncTransactionQueue::GroupImpl::schedule(NSInteger priority, dispatch_queue_t queue, dispatch_block_t block)"></a>void ASAsyncTransactionQueue::GroupImpl::schedule(NSInteger priority, dispatch_queue_t queue, dispatch_block_t block)</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ASAsyncTransactionQueue::GroupImpl::schedule(<span class="built_in">NSInteger</span> priority, <span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block)</span><br><span class="line">&#123;</span><br><span class="line">  ASAsyncTransactionQueue &amp;q = _queue;</span><br><span class="line">  std::lock_guard&lt;std::mutex&gt; l(q._mutex);</span><br><span class="line">  </span><br><span class="line">  DispatchEntry &amp;entry = q._entries[queue];</span><br><span class="line">  </span><br><span class="line">  Operation operation;</span><br><span class="line">  operation._block = block;</span><br><span class="line">  operation._group = <span class="keyword">this</span>;</span><br><span class="line">  operation._priority = priority;</span><br><span class="line">  entry.pushOperation(operation);</span><br><span class="line">  </span><br><span class="line">  ++_pendingOperations; <span class="comment">// enter group</span></span><br><span class="line">  </span><br><span class="line"><span class="meta">#if ASDISPLAYNODE_DELAY_DISPLAY</span></span><br><span class="line">  <span class="built_in">NSUInteger</span> maxThreads = <span class="number">1</span>;</span><br><span class="line"><span class="meta">#else </span></span><br><span class="line">  <span class="built_in">NSUInteger</span> maxThreads = [<span class="built_in">NSProcessInfo</span> processInfo].activeProcessorCount * <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Bit questionable maybe - we can give main thread more CPU time during tracking;</span></span><br><span class="line">  <span class="keyword">if</span> ([[<span class="built_in">NSRunLoop</span> mainRunLoop].currentMode isEqualToString:<span class="built_in">UITrackingRunLoopMode</span>])</span><br><span class="line">    --maxThreads;</span><br><span class="line"><span class="meta">#endif</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (entry._threadCount &lt; maxThreads) &#123; <span class="comment">// we need to spawn another thread</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// first thread will take operations in queue order (regardless of priority), other threads will respect priority</span></span><br><span class="line">    <span class="keyword">bool</span> respectPriority = entry._threadCount &gt; <span class="number">0</span>;</span><br><span class="line">    ++entry._threadCount;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      std::unique_lock&lt;std::mutex&gt; lock(q._mutex);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// go until there are no more pending operations</span></span><br><span class="line">      <span class="keyword">while</span> (!entry._operationQueue.empty()) &#123;</span><br><span class="line">        Operation operation = entry.popNextOperation(respectPriority);</span><br><span class="line">        lock.unlock();</span><br><span class="line">        <span class="keyword">if</span> (operation._block) &#123;</span><br><span class="line">          ASProfilingSignpostStart(<span class="number">3</span>, operation._block);</span><br><span class="line">          operation._block();</span><br><span class="line">          ASProfilingSignpostEnd(<span class="number">3</span>, operation._block);</span><br><span class="line">        &#125;</span><br><span class="line">        operation._group-&gt;leave();</span><br><span class="line">        operation._block = <span class="literal">nil</span>; <span class="comment">// the block must be freed while mutex is unlocked</span></span><br><span class="line">        lock.lock();</span><br><span class="line">      &#125;</span><br><span class="line">      --entry._threadCount;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (entry._threadCount == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">NSCAssert</span>(entry._operationQueue.empty() || entry._operationPriorityMap.empty(), <span class="string">@"No working threads but operations are still scheduled"</span>); <span class="comment">// this shouldn't happen</span></span><br><span class="line">        q._entries.erase(queue);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到,schedule方法管理着线程数,并且一直取出operation运行,直到所有operation运行完毕,调用<code>leave</code>方法.有点像GCD的<code>dispatch_group_t</code>.<br>接下来看看leave方法.</p>
+<h2 id="void-ASAsyncTransactionQueue-GroupImpl-leave"><a href="#void-ASAsyncTransactionQueue-GroupImpl-leave" class="headerlink" title="void ASAsyncTransactionQueue::GroupImpl::leave()"></a>void ASAsyncTransactionQueue::GroupImpl::leave()</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ASAsyncTransactionQueue::GroupImpl::leave()</span><br><span class="line">&#123;</span><br><span class="line">  std::lock_guard&lt;std::mutex&gt; l(_queue._mutex);</span><br><span class="line">  --_pendingOperations;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (_pendingOperations == <span class="number">0</span>) &#123;</span><br><span class="line">    std::list&lt;GroupNotify&gt; notifyList;</span><br><span class="line">    _notifyList.swap(notifyList);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (GroupNotify &amp; notify : notifyList) &#123;</span><br><span class="line">      <span class="built_in">dispatch_async</span>(notify._queue, notify._block);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _condition.notify_one();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// there was attempt to release the group before, but we still</span></span><br><span class="line">    <span class="comment">// had operations scheduled so now is good time</span></span><br><span class="line">    <span class="keyword">if</span> (_releaseCalled) &#123;</span><br><span class="line">      delete <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对在notifyList每一个notify,调用notify._block.其实这里就像<code>dispatch_group_t</code>中的那样,当一个group完成后,发送一个通知.那么这个通知发送到哪里呢?换句话说,什么时候向notifyList添加notify呢?</p>
+<h1 id="修改content"><a href="#修改content" class="headerlink" title="修改content"></a>修改content</h1><p>答案是第一次取得<code>mainTransactionGroup</code>的时候.mainTransactionGroup采用惰性初始化,在首次取得mainTransactionGroup的时候,程序会在runloop中注册一个回调,回调之后会调用一个commit方法.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)commit</span><br><span class="line">&#123;</span><br><span class="line">  ASAsyncTransactionAssertMainThread();</span><br><span class="line">  <span class="built_in">NSAssert</span>(<span class="keyword">self</span>.state == ASAsyncTransactionStateOpen, <span class="string">@"You cannot double-commit a transaction"</span>);</span><br><span class="line">  <span class="keyword">self</span>.state = ASAsyncTransactionStateCommitted;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> ([_operations count] == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// Fast path: if a transaction was opened, but no operations were added, execute completion block synchronously.</span></span><br><span class="line">    <span class="keyword">if</span> (_completionBlock) &#123;</span><br><span class="line">      _completionBlock(<span class="keyword">self</span>, <span class="literal">NO</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">NSAssert</span>(_group != <span class="literal">NULL</span>, <span class="string">@"If there are operations, dispatch group should have been created"</span>);</span><br><span class="line">    </span><br><span class="line">    _group-&gt;notify(_callbackQueue, ^&#123;</span><br><span class="line">      <span class="comment">// _callbackQueue is the main queue in current practice (also asserted in -waitUntilComplete).</span></span><br><span class="line">      <span class="comment">// This code should be reviewed before taking on significantly different use cases.</span></span><br><span class="line">      ASAsyncTransactionAssertMainThread();</span><br><span class="line">      [<span class="keyword">self</span> completeTransaction];</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> ASAsyncTransactionQueue::GroupImpl::notify(<span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block)</span><br><span class="line">&#123;</span><br><span class="line">  std::lock_guard&lt;std::mutex&gt; l(_queue._mutex);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (_pendingOperations == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">dispatch_async</span>(queue, block);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    GroupNotify notify;</span><br><span class="line">    notify._block = block;</span><br><span class="line">    notify._queue = queue;</span><br><span class="line">    _notifyList.push_back(notify);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="transaction已经完成的情况"><a href="#transaction已经完成的情况" class="headerlink" title="transaction已经完成的情况"></a>transaction已经完成的情况</h2><p>在上述<code>notify</code>方法中,如果<code>_pendingOperations</code>为0,则代表已经完成了这个transaction.那样就可以在主线程中进行赋值等工作,不需要注册notify.</p>
+<h2 id="transcation未完成的情况"><a href="#transcation未完成的情况" class="headerlink" title="transcation未完成的情况"></a>transcation未完成的情况</h2><p>在上述<code>notify</code>方法中,如果<code>_pendingOperations</code>不为0,则表示transaction中的operation还没有全部完成.则需要注册一个notify,并储存在notifyList中.等待全部operation完成后后再在主线程中进行赋值工作.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)completeTransaction</span><br><span class="line">&#123;</span><br><span class="line">  ASAsyncTransactionState state = <span class="keyword">self</span>.state;</span><br><span class="line">  <span class="keyword">if</span> (state != ASAsyncTransactionStateComplete) &#123;</span><br><span class="line">    <span class="built_in">BOOL</span> isCanceled = (state == ASAsyncTransactionStateCanceled);</span><br><span class="line">    <span class="keyword">for</span> (ASAsyncTransactionOperation *operation <span class="keyword">in</span> _operations) &#123;</span><br><span class="line">      [operation callAndReleaseCompletionBlock:isCanceled];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Always set state to Complete, even if we were cancelled, to block any extraneous</span></span><br><span class="line">    <span class="comment">// calls to this method that may have been scheduled for the next runloop</span></span><br><span class="line">    <span class="comment">// (e.g. if we needed to force one in this runloop with -waitUntilComplete, but another was already scheduled)</span></span><br><span class="line">    <span class="keyword">self</span>.state = ASAsyncTransactionStateComplete;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (_completionBlock) &#123;</span><br><span class="line">      _completionBlock(<span class="keyword">self</span>, isCanceled);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)callAndReleaseCompletionBlock:(<span class="built_in">BOOL</span>)canceled;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (_operationCompletionBlock) &#123;</span><br><span class="line">    _operationCompletionBlock(<span class="keyword">self</span>.value, canceled);</span><br><span class="line">    <span class="comment">// Guarantee that _operationCompletionBlock is released on _callbackQueue:</span></span><br><span class="line">    <span class="keyword">self</span>.operationCompletionBlock = <span class="literal">nil</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是在这里以value作为参数调用了completion.</p>
+<h1 id="关于dispatch-async和runloop的一点细节"><a href="#关于dispatch-async和runloop的一点细节" class="headerlink" title="关于dispatch_async和runloop的一点细节"></a>关于dispatch_async和runloop的一点细节</h1><p>如果以主线程为参数调用<code>dispatch_async</code>,block会在下一个runloop被执行.所以如果在notify被调用前所有operation已经完成,那么被改变的layer会在下一个runloop中被更新.如果operation在notify被调用时还没有完全被完成,那么layer将会在operation全部完成的那一刻的下一个runloop中被更新.即layer总是在根node的所有operation都完成后的下一个runloop中被更新.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在ASDK的绘制流程被触发后,负责调度block的mainTransactionGroup会在本次runloop结束前注册一个通知,另一方面,取得需要显示的node的block并且在后台运行这些block,取得结果,在所有工作完成后通知被注册方,执行completion,在completion中将block的结果赋值给各个layer的content,这样就完成了ASDK的绘制流程.</p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2017/02/09/2017-02-09/" title="iOS逆向工程之微信防撤回">
+                    <div class="nextTitle">iOS逆向工程之微信防撤回</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2016/12/14/2016-12-14/" title="Strong-Weak Dance">
+                    <div class="prevTitle">Strong-Weak Dance</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AsyncDisplayKit介绍"><span class="toc-number">1.</span> <span class="toc-text">AsyncDisplayKit介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于CALayer的绘制时机"><span class="toc-number">2.</span> <span class="toc-text">关于CALayer的绘制时机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#进入绘制流程"><span class="toc-number">3.</span> <span class="toc-text">进入绘制流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#void-display-BOOL-asynchronously"><span class="toc-number">3.1.</span> <span class="toc-text">(void)display:(BOOL)asynchronously</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#void-displayAsyncLayer-ASDisplayLayer-asyncLayer-asynchronously-BOOL-asynchronously"><span class="toc-number">3.2.</span> <span class="toc-text">- (void)displayAsyncLayer:(_ASDisplayLayer *)asyncLayer asynchronously:(BOOL)asynchronously</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#displayBlockWithAsynchronous-isCancelledBlock-rasterizing"><span class="toc-number">3.3.</span> <span class="toc-text">-_displayBlockWithAsynchronous:isCancelledBlock:rasterizing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock-displayBlocks"><span class="toc-number">3.4.</span> <span class="toc-text">-__recursivelyRasterizeSelfAndSublayersWithIsCancelledBlock:displayBlocks:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#void-addOperationWithBlock-priority-queue-completion"><span class="toc-number">3.5.</span> <span class="toc-text">- (void)addOperationWithBlock:priority:queue:completion:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#void-ASAsyncTransactionQueue-GroupImpl-schedule-NSInteger-priority-dispatch-queue-t-queue-dispatch-block-t-block"><span class="toc-number">3.6.</span> <span class="toc-text">void ASAsyncTransactionQueue::GroupImpl::schedule(NSInteger priority, dispatch_queue_t queue, dispatch_block_t block)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#void-ASAsyncTransactionQueue-GroupImpl-leave"><span class="toc-number">3.7.</span> <span class="toc-text">void ASAsyncTransactionQueue::GroupImpl::leave()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#修改content"><span class="toc-number">4.</span> <span class="toc-text">修改content</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transaction已经完成的情况"><span class="toc-number">4.1.</span> <span class="toc-text">transaction已经完成的情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#transcation未完成的情况"><span class="toc-number">4.2.</span> <span class="toc-text">transcation未完成的情况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于dispatch-async和runloop的一点细节"><span class="toc-number">5.</span> <span class="toc-text">关于dispatch_async和runloop的一点细节</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 78
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href="/2019/02/09/2019-02-09/">使用 Flutter 构建第一个应用后的一点感想</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span><a class="archive-post-title" href="/2018/09/16/2018-09-16/">Learn OpenGL第一章学习体会</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href="/2017/09/15/2018-09-15/">迁移一波博客</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href="/2017/07/04/2017-07-04/">Unix下关于套接字的一些细节</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href="/2017/07/02/2017-07-02/">使用Electron和JavaScript构建桌面应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href="/2017/04/17/2017-04-17/">iOS转场:神奇效果</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2017/03/22/2017-03-22/">总结一下让动画保持流畅的几个方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span><a class="archive-post-title" href="/2017/03/13/2017-03-13/">漫谈Swift面向协议编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href="/2017/02/09/2017-02-09/">iOS逆向工程之微信防撤回</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href="/2017/01/10/2017-01-10/">AsyncDisplayKit（一）初识</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href="/2016/12/14/2016-12-14/">Strong-Weak Dance</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href="/2016/08/05/2016-08-05/">Objective-C之分类</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href="/2016/08/04/2016-08-04/">掌上课堂性能优化历程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2016/07/28/2016-07-28/">Swift代码性能优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span><a class="archive-post-title" href="/2016/07/07/2016-07-07/">Advanced NSOperactions</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span><a class="archive-post-title" href="/2016/06/07/2016-06-07/">使用CADisplayLink观察动画</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href="/2016/06/06/2016-06-06/">YALContextMenu</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href="/2016/06/02/2016-06-02/">Swift的面向协议编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2016/05/05/2016-05-05/">gitignore已追踪文件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span><a class="archive-post-title" href="/2016/04/23/2016-04-23/">ViewController转场</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2016/04/20/2016-04-20/">学习DACircularProgress</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2016/04/19/2016-04-19/">学习SDWebImage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/30</span><a class="archive-post-title" href="/2016/03/30/2016-03-30/">学习ODRefreshControl</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href="/2016/02/29/2016-02-29-1/">使用AVCptureSession</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href="/2016/02/29/2016-02-29/">旋转UIImage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href="/2016/02/24/2016-02-24-1/">NSNotification</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href="/2016/02/24/2016-02-24/">UIPickerView</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/28</span><a class="archive-post-title" href="/2016/01/28/2016-01-28/">为iOS app注册支持文件类型</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href="/2016/01/27/2016-01-27/">关于block与copy关键字</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span><a class="archive-post-title" href="/2016/01/26/集成个rdp/">集成个rdp</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2015 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2015/12/30/2015-12-30/">UIScrollView实现图片轮播</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href="/2015/12/29/2015-12-29/">frame,bounds和center</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href="/2015/12/12/2015-12-12/">学习Core Data</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href="/2015/12/06/2015-12-06/">NSOperation和NSOperationQueue</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href="/2015/12/05/2015-12-05/">map,reduce和filter</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span><a class="archive-post-title" href="/2015/12/03/2015-12-03/">Pitaya</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2015/12/02/Objective-C中的@property/">Objective-C中的@property和@ synthesize</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href="/2015/12/01/使用replay/">‘使用ReplayKit’</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href="/2015/11/24/命令模式/">命令模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span><a class="archive-post-title" href="/2015/11/10/对象池/">对象池模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span><a class="archive-post-title" href="/2015/11/03/浅复制和深复制/">‘Swift中的浅复制和深复制’</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2015/11/01/swift之类型属性/">swift之类型属性</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href="/2015/10/18/swift 属性观察器/">swift 属性观察器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href="/2015/10/18/swift 2.0的错误处理/">swift 2.0的异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2015/10/10/2015-12-08/">(Objective-C)@property后的关键字</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span><a class="archive-post-title" href="/2015/10/07/swift/">swift中的指针</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2015/09/29/学习MVVM (一)/">[MVVM]学习MVVM (一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href="/2015/08/17/[iOS]自定义cell作为section header/">[iOS]自定义cell作为section header</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href="/2015/08/15/apple/"> Apple Watch Human Interface Guidelines 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href="/2015/08/15/git常用指令/">git 常用指令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href="/2015/08/02/python 正则表达式/">python 正则表达式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/07</span><a class="archive-post-title" href="/2015/06/07/单例模式/">单例模式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/02</span><a class="archive-post-title" href="/2015/05/02/AVPlayer 后台播放/">AVPlayer 后台播放</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2015/04/26/UIImage encode/">UIImage encode的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span><a class="archive-post-title" href="/2015/04/26/关于user/">关于userdefault返回值的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2015/04/19/自定义类加入userdefault/">自定义类加入userdefault</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href="/2015/04/16/Provisioning profile/">Provisioning profile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span><a class="archive-post-title" href="/2015/04/03/kvo初试/">KVO</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href="/2015/03/25/iosstreaming audio/">iOS的streaming audio</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2015/03/22/handleOpenURL与OPenURL/">handleOpenURL与OPenURL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2015/03/22/ui/">（转）UIApplication 总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span><a class="archive-post-title" href="/2015/03/19/读取网络文件/">读取网络文件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span><a class="archive-post-title" href="/2015/03/19/Apple Watch app和iOS的数据通信/">Apple Watch app和iOS的通信</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href="/2015/03/18/apple watch界面跳转/">apple watch界面导航</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href="/2015/03/18/关unable to find interface controller class '' to instantiate错误/">关于unable to find interface controller class ' to instantiate错误</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span><a class="archive-post-title" href="/2015/03/16/在Apple Watch里使用table/">在Apple Watch里使用table</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span><a class="archive-post-title" href="/2015/03/13/social framework与第三方share/">social framework与第三方shareSDK</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href="/2015/03/12/降低程序耦合度与代码复用/">降低程序耦合度与代码复用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href="/2015/03/11/add/">addSubview和delegate</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href="/2015/03/05/将有汉字的NSString转换为NSUrl/">将有汉字的NSString转换为NSUrl</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/04</span><a class="archive-post-title" href="/2015/03/04/UITableViewController setDataController：unrecognized selector sent to instance/">UITableViewController setDataController：unrecognized selector sent to instance</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span><a class="archive-post-title" href="/2015/03/03/gcd/">GCD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span><a class="archive-post-title" href="/2015/03/03/UitableView/">UitableView</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2014 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href="/2014/12/17/NSURLSession/">NSURLSession</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Farlanki"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
