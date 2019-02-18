@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Farlanki</title>
+    <title>在 Flutter 中使用多 Isolate · Farlanki</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -77,6 +77,8 @@
 
     <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -201,14 +203,23 @@
 </head>
 
     
-        <body class="home-body">
+        <body class="post-body">
     
     
-<header class="header index-header">
+<header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Farlanki.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">在 Flutter 中使用多 Isolate</a>
+            </div>
+    </div>
     
     <a class="home-link" href="/">Farlanki.</a>
 </header>
@@ -227,17 +238,17 @@ height:50vh;
     <!-- 主页  -->
     
     
-    <!-- 文章页  -->
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Farlanki.
-            <!-- 文章页  -->
+            在 Flutter 中使用多 Isolate
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -245,10 +256,43 @@ height:50vh;
             <!-- 主页副标题  -->
             
             
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/02/18</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -349,357 +393,56 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/08/17/[iOS]自定义cell作为section header/">
-            
-                <span>[iOS]自定义cell作为section header</span>
-        </a>
-        <div class="abstract-content">
-            1.在storyboard中放置一个 table view cell，设置好identifier和content view的tag。2.实现 tableView:viewForHeaderInSection 方法：
-1234567override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -&gt; UIView? &#123;            let cellIdentifier = &quot;sectionHeader0&quot;            let he...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/08/17</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/08/15/apple/">
-            
-                <span> Apple Watch Human Interface Guidelines 笔记</span>
-        </a>
-        <div class="abstract-content">
-            基本的UI设计Apple Watch 特征
-隐私性
-整体性
-轻量化使用
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>我们在编程的时候经常会用到多线程。多线程技术能让我们得以利用多核CPU的优势，能将一些繁重的任务交给别的线程运算。在 iOS 编程中，我们需要小心对待在主线程执行的耗时长的方法，因为一旦我们阻塞了主线程，应用的 UI 就会被卡住，这是一种十分不好的用户体验。在使用 flutter 的时候，其实也会有类似问题。那么，我们在使用 Flutter 的时候，又应该如何使用“多线程”呢？</p>
+<h1 id="isolate"><a href="#isolate" class="headerlink" title="isolate"></a>isolate</h1><p>dart 语言中的’多线程‘被称为 isolate。事实上，isolate 是一种不共享状态的多线程技术。dart语言设计 isolate 这种体系能避免线程竞争等情况的出现。也是因为 isolate 之间是不能共享状态的，所以 isolate 中只能调用静态方法或者顶层方法。主 isolate 和其他 isolate 通过接口进行通信。这样，各个 isolate 中的状态就是独立的。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>设想我们在完成这样一个方法：从应用本地沙盒中读取一个长度为数万单词列表，返回一个 List<string>。由于单词列表的长度十分长，并且是读文件操作，所以我们必须将这个方法放在另一个 isolate 执行，否则一旦阻塞了主 isolate ，UI 将会被卡住。</string></p>
+<p>首先，我们需要创建两个方法，一个是暴露给外部的方法，另一个是处理的单词的方法。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyWordReader</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">Future</span>&lt;<span class="title">String</span>&gt; <span class="title">_getFilePath</span>() <span class="title">async</span> </span>&#123;</span><br><span class="line">	<span class="comment">// async function here</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Future&lt;<span class="built_in">List</span>&lt;CYWord&gt;&gt; getRawWordList() <span class="keyword">async</span> &#123;</span><br><span class="line">	<span class="comment">//取得文件路径</span></span><br><span class="line">    <span class="built_in">String</span> filePath = <span class="keyword">await</span> _getFilePath();</span><br><span class="line">	<span class="comment">//to be done</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> Future&lt;<span class="keyword">void</span>&gt; _getRawWordList(SendPort sendPort) <span class="keyword">async</span> &#123;</span><br><span class="line"><span class="comment">//to be done</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>留意<code>getRawWordList</code>，我们首先需要取得文件路径。然后再看看<code>_getRawWordList</code>,这个内部方法是静态的，并且需要一个 sendPort 作为参数。这个 sendPort 是什么，将会在下面说明。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyWordReader</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  Future&lt;<span class="built_in">String</span>&gt; _getFilePath() <span class="keyword">async</span> &#123;</span><br><span class="line">	  <span class="comment">// async function here</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;CYWord&gt;&gt; getRawWordList() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="comment">//取得文件路径</span></span><br><span class="line">    <span class="built_in">String</span> filePath = <span class="keyword">await</span> _getFilePath();</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//创建一个 ReceivePort</span></span><br><span class="line">    ReceivePort receivePort = ReceivePort();</span><br><span class="line">	</span><br><span class="line">	  <span class="comment">//创建 isolate ， 并且将和 ReceivePort 对应的 SendPort 传给 isolate</span></span><br><span class="line">    <span class="keyword">await</span> Isolate.spawn(_getRawWordList, receivePort.sendPort);</span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; words;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">for</span> (<span class="keyword">var</span> value <span class="keyword">in</span> receivePort) &#123;</span><br><span class="line">      <span class="keyword">if</span> (value <span class="keyword">is</span> SendPort) &#123;</span><br><span class="line">      		<span class="comment">//接受到另一个 isolate 的SendPort,使用该 port 发送文件路径</span></span><br><span class="line">      		SendPort sendPort = value;</span><br><span class="line">        	sendPort.send(filePath);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value <span class="keyword">is</span> <span class="built_in">List</span>) &#123;</span><br><span class="line">      		<span class="comment">//接收到结果，结束</span></span><br><span class="line">        	words = value;</span><br><span class="line">        	receivePort.close();</span><br><span class="line">        	<span class="keyword">break</span>;</span><br><span class="line">      	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> words;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> Future&lt;<span class="keyword">void</span>&gt; _getRawWordList(SendPort sendPort) <span class="keyword">async</span> &#123;</span><br><span class="line">	  ReceivePort port = ReceivePort();</span><br><span class="line">    sendPort.send(port.sendPort);</span><br><span class="line">    <span class="comment">//等待文件路径</span></span><br><span class="line">    <span class="built_in">String</span> filePath = <span class="keyword">await</span> port.first;</span><br><span class="line">    port.close();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; result = <span class="keyword">new</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;();</span><br><span class="line">    <span class="keyword">var</span> fields = <span class="keyword">await</span> input</span><br><span class="line">        .transform(utf8.decoder)</span><br><span class="line">        .transform(csvCodec.decoder)</span><br><span class="line">        .toList();</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">List</span>&lt;<span class="keyword">dynamic</span>&gt; list <span class="keyword">in</span> fields) &#123;</span><br><span class="line">      <span class="keyword">if</span> (list.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        result.add(list[<span class="number">0</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    sendPort.send(result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上就是完整的代码。这里解释一下 ReceivePort 和 SendPort。ReceivePort 和 SendPort 是一一对应的。在上述程序中，有两个 isolate，每个 isolate 都有自己的 ReceivePort 和接受到的另一个 isolate 的 SendPort。</p>
+<p>另外，工作 isolate 向主 isolate 发送了两次消息。第一次是将自己的 SendPort 发送给主线程，让主线程得以将文件路径传给自己。第二次是将结果返回给主 isolate。主 isolate 使用await for 方法等待所有消息，针对不同的消息做出不同的处理。当接受到结果的时候，关闭port，返回结果。</p>
+<h1 id="compute-function"><a href="#compute-function" class="headerlink" title="compute function"></a>compute function</h1><p>compute function 是 flutter 基于 isolate 的一个封装。但是，<a href="https://github.com/flutter/flutter/issues/25890" target="_blank" rel="noopener">这个issue</a>说明，compute function 是不支持传入一个异步的方法的。所以这里仅仅展示其用法，没办法将之前的例子改为使用 compute function 实现。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="built_in">int</span> getnthPrime(<span class="built_in">int</span> n) &#123;</span><br><span class="line">  <span class="built_in">int</span> currentPrimeCount = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">int</span> candidate = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span>(currentPrimeCount &lt; n) &#123;</span><br><span class="line">    ++candidate;</span><br><span class="line">    <span class="keyword">if</span> (isPrime(candidate)) &#123;</span><br><span class="line">      ++currentPrimeCount;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> candidate;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> _getPrime() <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="built_in">int</span> ans = <span class="keyword">await</span> compute(getnthPrime, <span class="number">10000</span>);</span><br><span class="line">  setState(()&#123;</span><br><span class="line">    prime=ans;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码展示了如何使用 compute function 计算第 n 个质数。</p>
+<p>可见，isolate 接口比 compute functinon 功能更加强大。</p>
+<h1 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h1><p><a href="https://blog.usejournal.com/flutter-async-beginner-friendly-guide-for-heavy-lifting-operations-cf8ec81833d7" target="_blank" rel="noopener">1.Flutter async : Beginner friendly guide for heavy lifting operations</a><br><a href="https://webdev.dartlang.org/articles/performance/event-loop#darts-single-thread-of-execution" target="_blank" rel="noopener">2.The Event Loop and Dart</a></p>
 
-关于App导航风格
-栏式            ：当应用有分栏信息时使用，使用者通过在一个页面选择一次来到达目标页面。
-基于页面的：使用者通过水平滑动切换页面，在页面的底部有dot indictor，页面数量尽量少。
-
-用户交互
-基于动作的事件：轻触通常代表选择或者交互，是使用者和应用交互的主要方法。
-手势
-垂直滑动以滚动当前页面。
-水平滑动以展示上一或下一页面。
-左侧滑动返回父页面。
-
-
-压力触摸：在触摸的基础上加上了压力程度感应。
-数码表冠：让用户轻松地滚动长页面。
-
-预览页面预览页面是程序的最重要的信息的快速...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/08/15</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/08/15/git常用指令/">
-            
-                <span>git 常用指令</span>
-        </a>
-        <div class="abstract-content">
-            $ git add filename增加到暂存区$ git commit -m 注释 提交更改$ git reset --hard HEAD^ 返回一个版本 或一定的版本号$ git reflog查看记录$ git checkout -b branchname新建并且转移分支$ git branch查看分支$ git checkout branchname转移分支$ git branch -d branchname 删除分支$ git status查看状态$ git add -A添加自动追踪的文件到暂存区
-
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/08/15</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/08/02/python 正则表达式/">
-            
-                <span>python 正则表达式</span>
-        </a>
-        <div class="abstract-content">
-            运用正则表达式可以找到文档中符合条件的内容
-12title = re.search('&lt;title&gt;(.*?)&lt;/title&gt;',html,re.S)title = re.findall('&lt;title&gt;(.*?)&lt;/title&gt;',html,re.S)
-search找到一个符合条件的就会停止，而findall会扫描整个文档找到尽可能多的符合条件的内容
-
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/08/02</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/06/07/单例模式/">
-            
-                <span>单例模式</span>
-        </a>
-        <div class="abstract-content">
-            单例模式（Singleton）是一种常用的软件设计模式。在它的核心结构中只包含一个被称为单例类的特殊类。通过单例模式可以保证系统中一个类只有一个实例而且该实例易于外界访问，从而方便对实例个数的控制并节约系统资源。如果希望在系统中某个类的对象只能存在一个，单例模式是最好的解决方案。
-swift的单例模式由于swift1.2之后支持了类储存属性，可以使用下面的方法简单的实现单例模式
-1234567891011class singleton&#123;	static let sharedInstance = singleton()		func doSomething()	&#123;		//d...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/06/07</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/05/02/AVPlayer 后台播放/">
-            
-                <span>AVPlayer 后台播放</span>
-        </a>
-        <div class="abstract-content">
-            在plist中添加Required background modes，然后在appdelegate中加入
-1[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-参考：http://stackoverflow.com/questions/4771105/how-do-i-get-my-avplayer-to-play-while-app-is-in-background
-
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/05/02</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/26/UIImage encode/">
-            
-                <span>UIImage encode的问题</span>
-        </a>
-        <div class="abstract-content">
-            UIImage没有实现encodeWithCoder。
-12aCoder.encodeObject(UIImagePNGRepresentation(self.image), forKey: &quot;image&quot;)self.image = UIImage(data: aDecoder.decodeObjectForKey(&quot;image&quot;) as! NSData )
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/26</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/26/关于user/">
-            
-                <span>关于userdefault返回值的问题</span>
-        </a>
-        <div class="abstract-content">
-            userdefaul的返回值总是不可变的。例如nsmutablearray 即使显式转换成nsmutablearray，但是使用addobject方法会崩溃。解决方式
-1NSMutableArray *loadDefects = [[defaultDefects objectForKey:@&quot;defaultDefects&quot;]mutableCopy];
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/26</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/19/自定义类加入userdefault/">
-            
-                <span>自定义类加入userdefault</span>
-        </a>
-        <div class="abstract-content">
-            自定义类加入userdefault需要实现NSCoding协议，实现其中的func encodeWithCoder(aCoder: NSCoder) 和 init(coder aDecoder: NSCoder)
-在加入userdefault前，把自定义的类转化为NSData就可以了
-12var encodedData :NSData = NSKeyedArchiver.archivedDataWithRootObject(myObject) userDefault!.setObject(myObject, forKey: "myObject")
-解析：
-12var encodedDat...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/19</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/16/Provisioning profile/">
-            
-                <span>Provisioning profile</span>
-        </a>
-        <div class="abstract-content">
-            配置文件的使用方法是，在development.apple.com中下载，然后在相应的项目中使用。其中要注意文件所制定的app id ，在team name后面为*的文件可供整个team使用，只要bundle id符合规定。而特定的app id只能在app id相同的项目使用。在配置文件里存在的devices可以进行真机调试。
-
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/16</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
-    
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/page/5/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">NEXT &#62;</a>
-    </nav>
-    
-</main>
-            <!-- profile -->
+    <ul class="post-paginator">
+        <li class="next">
             
-            <div class="profile">
-    <img class="profile-avatar" alt="avatar" src="/avatar/Misaka.jpg">
-    <div class="profile-name">Farlanki</div>
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/02/09/2019-02-09/" title="使用 Flutter 构建第一个应用后的一点感想">
+                    <div class="prevTitle">使用 Flutter 构建第一个应用后的一点感想</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <div class="profile-signature">
-        一个多头
-    </div>
     
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
     
-    <div class="profile-social">
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
     
 
-    </div>
-    
-    
-        <div class="friends">
-            <div>FRIENDS</div>
-            
-                
-            
-                
-            
-                
-            
-        </div>
-    
-    
-        <div class="about-me">
-            <a href="/about">ABOUT ME</a>
-        </div>
-    
-</div>
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
             
         </div>
         <footer class="footer footer-unloaded">
@@ -767,6 +510,24 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#isolate"><span class="toc-number">1.</span> <span class="toc-text">isolate</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#例子"><span class="toc-number">1.1.</span> <span class="toc-text">例子</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#compute-function"><span class="toc-number">2.</span> <span class="toc-text">compute function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文章："><span class="toc-number">3.</span> <span class="toc-text">参考文章：</span></a></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -2511,6 +2272,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

@@ -357,6 +357,30 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2017/01/10/2017-01-10/">
+            
+                <span>AsyncDisplayKit（一）初识</span>
+        </a>
+        <div class="abstract-content">
+            AsyncDisplayKit介绍AsyncDisplayKit的是Facebbook为了解决其App在某些机型上的性能问题而写的一个库。这个库使用ASNode把UIView再进行了封装，最大限度的保留开发者对于使用UIView的习惯。在UIView之上的ASNode是线程安全的，即使在后台线程使用ASNode也毫无问题。这篇文章分析的主要是ASNode的绘制流程。
+关于CALayer的绘制时机在分析ASNode的绘制流程之前，我们先来了解一下一些关于CALayer的知识。当一个CALayer需要更新的时候，系统会先将其标记，在下一个更新周期调用其-display（）方法对其进行绘制。A...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/10</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2016/12/14/2016-12-14/">
             
                 <span>Strong-Weak Dance</span>
@@ -573,30 +597,6 @@ Protocol ExtensionSwift 2增加了一个名为Protocol Extensions的新特性.�
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/05/05</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2016/04/23/2016-04-23/">
-            
-                <span>ViewController转场</span>
-        </a>
-        <div class="abstract-content">
-            在看这篇文章之前,不妨先看看objccn的两篇文章自定义 ViewController 容器转场View Controller 转场
-UIViewControllerAnimatedTransitioningUIViewControllerAnimatedTransitioning这个协议要求实现两个方法:- (NSTimeInterval)transitionDuration:(id &lt;UIViewControllerContextTransitioning&gt;)transitionContext- (void)animateTransition:(id&lt;UIViewC...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/04/23</span>
             </div>
             <!-- tags  -->
             
@@ -1965,9 +1965,14 @@ UIViewControllerAnimatedTransitioningUIViewControllerAnimatedTransitioning这个
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 78
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1980,6 +1985,11 @@ UIViewControllerAnimatedTransitioningUIViewControllerAnimatedTransitioning这个
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href="/2019/02/18/2019-02-18/">在 Flutter 中使用多 Isolate</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2135,12 +2145,12 @@ UIViewControllerAnimatedTransitioningUIViewControllerAnimatedTransitioning这个
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
         </li>
     
     

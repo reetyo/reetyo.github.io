@@ -346,6 +346,30 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/08/17/[iOS]自定义cell作为section header/">
+            
+                <span>[iOS]自定义cell作为section header</span>
+        </a>
+        <div class="abstract-content">
+            1.在storyboard中放置一个 table view cell，设置好identifier和content view的tag。2.实现 tableView:viewForHeaderInSection 方法：
+1234567override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -&gt; UIView? &#123;            let cellIdentifier = &quot;sectionHeader0&quot;            let he...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/08/17</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/08/15/apple/">
             
                 <span> Apple Watch Human Interface Guidelines 笔记</span>
@@ -577,30 +601,6 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/16</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/03/kvo初试/">
-            
-                <span>KVO</span>
-        </a>
-        <div class="abstract-content">
-            kvo机制可以设置被监听者和监听者，当被监听者的某个属性发生变化时，调用监听者的相关方法。
-1234567891011//add observer[self.radioRecordArray addObserver:self forKeyPath:@"downloadDidFinished" options:NSKeyValueObservingOptionNew context:Nil];//响应函数-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)c...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/03</span>
             </div>
             <!-- tags  -->
             
@@ -1895,9 +1895,14 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 78
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1910,6 +1915,11 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href="/2019/02/18/2019-02-18/">在 Flutter 中使用多 Isolate</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2065,12 +2075,12 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
         </li>
     
     

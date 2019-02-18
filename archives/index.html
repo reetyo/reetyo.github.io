@@ -346,6 +346,30 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/02/18/2019-02-18/">
+            
+                <span>在 Flutter 中使用多 Isolate</span>
+        </a>
+        <div class="abstract-content">
+            我们在编程的时候经常会用到多线程。多线程技术能让我们得以利用多核CPU的优势，能将一些繁重的任务交给别的线程运算。在 iOS 编程中，我们需要小心对待在主线程执行的耗时长的方法，因为一旦我们阻塞了主线程，应用的 UI 就会被卡住，这是一种十分不好的用户体验。在使用 flutter 的时候，其实也会有类似问题。那么，我们在使用 Flutter 的时候，又应该如何使用“多线程”呢？
+isolatedart 语言中的’多线程‘被称为 isolate。事实上，isolate 是一种不共享状态的多线程技术。dart语言设计 isolate 这种体系能避免线程竞争等情况的出现。也是因为 isolat...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/18</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/02/09/2019-02-09/">
             
                 <span>使用 Flutter 构建第一个应用后的一点感想</span>
@@ -576,30 +600,6 @@ class-dump : 用于取得应用的...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/09</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2017/01/10/2017-01-10/">
-            
-                <span>AsyncDisplayKit（一）初识</span>
-        </a>
-        <div class="abstract-content">
-            AsyncDisplayKit介绍AsyncDisplayKit的是Facebbook为了解决其App在某些机型上的性能问题而写的一个库。这个库使用ASNode把UIView再进行了封装，最大限度的保留开发者对于使用UIView的习惯。在UIView之上的ASNode是线程安全的，即使在后台线程使用ASNode也毫无问题。这篇文章分析的主要是ASNode的绘制流程。
-关于CALayer的绘制时机在分析ASNode的绘制流程之前，我们先来了解一下一些关于CALayer的知识。当一个CALayer需要更新的时候，系统会先将其标记，在下一个更新周期调用其-display（）方法对其进行绘制。A...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/10</span>
             </div>
             <!-- tags  -->
             
@@ -1894,9 +1894,14 @@ class-dump : 用于取得应用的...
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 78
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1909,6 +1914,11 @@ class-dump : 用于取得应用的...
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href="/2019/02/18/2019-02-18/">在 Flutter 中使用多 Isolate</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2064,12 +2074,12 @@ class-dump : 用于取得应用的...
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
         </li>
     
     
