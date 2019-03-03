@@ -266,7 +266,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.3k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -399,7 +399,7 @@ height:50vh;
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">__<span class="keyword">weak</span> MyViewController *wself = <span class="keyword">self</span>;  </span><br><span class="line"><span class="keyword">self</span>.completionHandler = ^ &#123;  </span><br><span class="line">    <span class="comment">//do something in block using wself</span></span><br><span class="line">    <span class="comment">//do something in block using wself    </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>但是这种方法会遇到一个问题,就是当执行block中的操作时,self已经被释放了,这就会导致wself为nil,在某些情况下,这会导致应用崩溃.有人会说,如果我们加入一个判断.判断wself不为nil,不就可以了么?事实上,这个方法并不可行.因为有可能在判断执行的时候,wself并不为空,但是当使用wself执行的时候,wself已经变为空值了.<br>这时候,我们就要使用<code>Strong-Weak Dance</code>了.</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">__<span class="keyword">weak</span> MyViewController *wself = <span class="keyword">self</span>;  </span><br><span class="line"><span class="keyword">self</span>.completionHandler = ^ &#123;  </span><br><span class="line">    __<span class="keyword">strong</span> __<span class="keyword">typeof</span>(wself) sself = wself;</span><br><span class="line">    <span class="comment">//do something in block using sself</span></span><br><span class="line">    <span class="comment">//do something in block using sself    </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>这样可以保证在block运行时,sself不为nil.<br>有人会问,这个强引用不会导致循环应用吗?这个强引用在这种情况下不会导致循环引用.因为block和self的循环引用是因为block捕获了self.当使用__weak关键字时,block捕获的是wself,这是一个弱引用.在block的运行过程中,一个强引用sself指向self,注意block并没有捕获sself.在block运行的时候,因为有sself的存在,所以self不会被释放,而在block运行结束后,sself的作用域结束,所以sself被释放,指向self的强应用被释放了,就不存在循环应用的问题.</p>
+<p>这样可以保证在block运行时,sself不为nil.<br>有人会问,这个强引用不会导致循环应用吗?这个强引用在这种情况下不会导致循环引用.因为block和self的循环引用是因为block捕获了self.当使用__weak关键字时,block捕获的是wself,这是一个弱引用.在block的运行过程中,一个强引用sself指向self,注意block并没有捕获sself.在block运行的时候,因为有sself的存在,所以self不会被释放,而在block运行结束后,sself的作用域结束,所以sself被释放,指向self的强应用被释放了,就不存在循环应用的问题.总结一下，只要强引用能在 block 中的代码运行完成后被销毁，就不会造成循环引用的问题。而 block 捕获的强引用的生命周期和 block 中的代码无关，和 blcok 本身有关，所以造成了循环引用。 </p>
 <h1 id="dig-deeper"><a href="#dig-deeper" class="headerlink" title="dig deeper"></a>dig deeper</h1><p>下面使用clang -rewrite-objc生成一段block的c代码.</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSArray</span> *array = [<span class="built_in">NSArray</span> array];</span><br><span class="line">    <span class="keyword">typeof</span>(array) __<span class="keyword">weak</span> warray = array;</span><br><span class="line">    blk _blk = ^&#123;</span><br><span class="line">        <span class="keyword">typeof</span>(warray) __<span class="keyword">strong</span> sarray = warray;</span><br><span class="line">        array;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>以上是源代码.</p>
@@ -454,6 +454,26 @@ height:50vh;
     
 
     <!-- 评论 -->
+    <!-- Gitalk 评论 start  -->
+<!-- Link Gitalk 的支持文件  -->
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+    <script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: `f7bdadd953275a5e5837`,
+        clientSecret: `6efbf687b8bc211dabb4d4f5e30b0f667e57ac1c`,
+        repo: `reetyo.github.io`,
+        owner: 'reetyo',
+        admin: ['reetyo'],
+        id: window.location.pathname,
+    });
+    gitalk.render('gitalk-container');
+</script>
+<!-- Gitalk end -->
 </main>
             <!-- profile -->
             
