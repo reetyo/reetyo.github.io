@@ -367,6 +367,33 @@ VBO 的生成方式如下:
         </div>
     </article>
     
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/03/10/2019-03-10/">
+            
+                <span>Method Swizzling</span>
+        </a>
+        <div class="abstract-content">
+            Method Swizzling 是一种能将方法的实现替换掉的技术，运用的是 Objective-C 的运行时方法实现的。其实现的具体思路是将方法的 imp 进行对调。
+原理在 Objective-C 中，所有的方法都是动态绑定的。在 Objective-C 的类结构体中，维护着一张方法表(method list)，记录着该类中所有方法的 sel 和 imp。在调用一个方法的时候，其实是通过 sel 寻找 对应的 imp，并调用imp。通过 Method Swizzling ， 我们可以将两个方法的 imp 进行对调。
+
+常规实现以下是摘抄自 NSHipster 的一段实现
+123456...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
     <!-- paginator  -->
     
 </main>
@@ -1670,9 +1697,38 @@ VBO 的生成方式如下:
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 79
+        Total : 80
         </div>
         <!-- search  -->
         
@@ -1708,6 +1764,11 @@ VBO 的生成方式如下:
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span><a class="archive-post-title" href="/2018/09/16/2018-09-16/">Learn OpenGL第一章学习体会</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href="/2018/03/10/2019-03-10/">Method Swizzling</a>
         </li>
     
     
@@ -2029,12 +2090,12 @@ VBO 的生成方式如下:
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     

@@ -346,6 +346,40 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/12/02/Objective-C中的@property/">
+            
+                <span>Objective-C中的@property和@ synthesize</span>
+        </a>
+        <div class="abstract-content">
+            @property@property在Objective-C中的作用是生成存取方法.当存取方法被生成后，就可以使用形如 实例名.属性名这种格式来访问实例变量.虽然这种方式和C++的访问对象成员的形式很像,但是在ObjC中的这种方法其实是调用了实例的存取方法而已.所以
+1myCar.type = "SUV";
+这种写法其实是与
+1[myCar setType:@"SUV"];
+等价.
+@synthesize@synthesize是将存取方法和变量关联起来.
+
+如果写入这样的代码:
+1@synthesize type = _type
+
+
+那么就是将实例变量_type和存取方法关联起来.我们可...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/02</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/12/01/使用replay/">
             
                 <span>‘使用ReplayKit’</span>
@@ -577,31 +611,6 @@ copy 关键字会影响setter方法:
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/07</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/09/29/学习MVVM (一)/">
-            
-                <span>[MVVM]学习MVVM (一)</span>
-        </a>
-        <div class="abstract-content">
-            信号中有value属性
-filter 方法 ：       根据block判断是否传递信号，若block返回true则传递map 方法：        处理信号中的value，block的返回值为信号的新valueflattenmap方法：处理信号中的信号，就是当信号的value为另一个信号时，将事件从内部信号发送到外部信号
-
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/09/29</span>
             </div>
             <!-- tags  -->
             
@@ -1915,9 +1924,38 @@ filter 方法 ：       根据block判断是否传递信号，若block返回true
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 79
+        Total : 80
         </div>
         <!-- search  -->
         
@@ -1953,6 +1991,11 @@ filter 方法 ：       根据block判断是否传递信号，若block返回true
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span><a class="archive-post-title" href="/2018/09/16/2018-09-16/">Learn OpenGL第一章学习体会</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href="/2018/03/10/2019-03-10/">Method Swizzling</a>
         </li>
     
     
@@ -2274,12 +2317,12 @@ filter 方法 ：       根据block判断是否传递信号，若block返回true
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     
