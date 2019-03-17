@@ -357,6 +357,31 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2016/02/24/2016-02-24-1/">
+            
+                <span>NSNotification</span>
+        </a>
+        <div class="abstract-content">
+            NSNotification的原理是通过NSNotificationCenter发送消息,从而所有监听了这些信息的对象都能收到消息,从而作出反应.
+NSNotification和KVO的区别KVO通常在需要观察某个对象的特定变化的时候使用,而NSNotification通常用于追踪特定的事件(例如用户停止滑动table).KVO不是使用NSNotification实现的.KVO的实现是通过运行时实现的.
+NSNotificationCenterNSNotificationCenter提供了一个广播消息的机制.每一个正在运行的Cocoa 程序都有一个NSNotificationCenter...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/02/24</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2016/02/24/2016-02-24/">
             
                 <span>UIPickerView</span>
@@ -599,46 +624,10 @@ Filterfilter方法用于过滤数组,遍历数组元素,把元素作为参数传
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/12/03/2015-12-03/">
-            
-                <span>Pitaya</span>
-        </a>
-        <div class="abstract-content">
-            简介
-Pitaya是一个基于NSURLSession开源的适合大文件上传的HTTP请求库.十分小巧.
-PitayaManager简介PitayaManager负责
-
-构造 NSURLRequest
-确定 URL
-确定 HTTP 方法（GET、POST 等）
-添加特定的 HTTP 头
-填充 HTTP Body
-
-
-
-2.驱动 session.dataTaskWithRequest 方法，开始请求
-实现multipart/form-data请求为什么这个库适合大文件的上传呢,原因就在PitayaManager的buildBody()和 buildHeader()方法中.在buildHeade...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/03</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/page/3/">&#60; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/">NEXT &#62;</a>
+        <a class="extend prev" rel="prev" href="/page/3/">&#60; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -2045,9 +2034,82 @@ PitayaManager简介PitayaManager负责
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 80
+        Total : 81
         </div>
         <!-- search  -->
         
@@ -2112,6 +2174,11 @@ PitayaManager简介PitayaManager负责
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/02</span><a class="archive-post-title" href="/2017/07/02/2017-07-02/">使用Electron和JavaScript构建桌面应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2017/05/16/2019-03-16/">将YUV图像渲染到屏幕上（OpenGL）</a>
         </li>
     
     
@@ -2409,12 +2476,12 @@ PitayaManager简介PitayaManager负责
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     

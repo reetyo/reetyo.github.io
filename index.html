@@ -539,6 +539,30 @@ VBO 的生成方式如下:
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2017/05/16/2019-03-16/">
+            
+                <span>将YUV图像渲染到屏幕上（OpenGL）</span>
+        </a>
+        <div class="abstract-content">
+            YUV 是我们在处理视频数据的时候经常会遇到的一种格式。我们在使用苹果的 VideoToolbox 框架将视频进行解码后，得到的就是 NV12 格式的 CVPixelBuffer。本篇文章将会在苹果的源码上解释如何将 YUV 图像渲染到屏幕上。本篇文章主要着重介绍在 iOS 上使用 OpenGL ES 如何将一个 YUV 格式的 buffer 显示出来。
+iOS 上的 OpenGLiOS 使用的是 OpenGL ES，这是 OpenGL 在移动端上的实现。苹果为了简化基于 OpenGL ES 应用的开发，设计了 GLKit 这个框架。使用这个框架能让我们更轻松地实现纹理加载，矩阵运算，渲...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/16</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2017/04/17/2017-04-17/">
             
                 <span>iOS转场:神奇效果</span>
@@ -590,34 +614,10 @@ CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首�
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2017/03/13/2017-03-13/">
-            
-                <span>漫谈Swift面向协议编程</span>
-        </a>
-        <div class="abstract-content">
-            前言面向对象编程(OOP)自从在很久之前就已经成为了主流,相信每一个软件工程师都曾经或者正在使用着OOP编程.诚然,OOP为我们提供了很多很好的特性,例如封装,多态和继承等,让代码复用率更高,程序的解耦更加容易实现.但是,在随着软件的功能越来越多,需求越来越复杂,OOP的一些缺点已经被暴露了出来.
-破立OOP缺点一:结构复杂很明显,OOP已经流行了很长的一段时间.在很多情况下,每当我们要实现一个新的需求,我们总会想到创建一个或几个新的类.这些类或许继承了之前已经存在的类,或者把之前存在的一些类的对象Wrap起来,从而使用它们的功能.然而这样做,很多情况下我们的类会继承到一些我们并用不到的...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/13</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -2024,9 +2024,82 @@ CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 80
+        Total : 81
         </div>
         <!-- search  -->
         
@@ -2091,6 +2164,11 @@ CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首�
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/02</span><a class="archive-post-title" href="/2017/07/02/2017-07-02/">使用Electron和JavaScript构建桌面应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2017/05/16/2019-03-16/">将YUV图像渲染到屏幕上（OpenGL）</a>
         </li>
     
     
@@ -2388,12 +2466,12 @@ CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     

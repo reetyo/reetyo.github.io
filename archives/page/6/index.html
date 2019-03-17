@@ -346,6 +346,30 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/10/07/swift/">
+            
+                <span>swift中的指针</span>
+        </a>
+        <div class="abstract-content">
+            swift中的指针为 unsafePointer , unsafeMutablePointer . 做参数时，可以如下用 func(&amp;a)用.memory属性取得指针指向地址的值，如果指针指向的地址不存在会引起崩溃。那么可以先用.hasvalue判断是否为零，再使用.memory属性。
+
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/07</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/09/29/学习MVVM (一)/">
             
                 <span>[MVVM]学习MVVM (一)</span>
@@ -581,37 +605,10 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/19/自定义类加入userdefault/">
-            
-                <span>自定义类加入userdefault</span>
-        </a>
-        <div class="abstract-content">
-            自定义类加入userdefault需要实现NSCoding协议，实现其中的func encodeWithCoder(aCoder: NSCoder) 和 init(coder aDecoder: NSCoder)
-在加入userdefault前，把自定义的类转化为NSData就可以了
-12var encodedData :NSData = NSKeyedArchiver.archivedDataWithRootObject(myObject) userDefault!.setObject(myObject, forKey: "myObject")
-解析：
-12var encodedDat...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/19</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/page/5/">&#60; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/page/7/">7</a><a class="page-number" href="/archives/page/8/">8</a><a class="extend next" rel="next" href="/archives/page/7/">NEXT &#62;</a>
+        <a class="extend prev" rel="prev" href="/archives/page/5/">&#60; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/page/7/">7</a><a class="page-number" href="/archives/page/8/">8</a><a class="page-number" href="/archives/page/9/">9</a><a class="extend next" rel="next" href="/archives/page/7/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1944,9 +1941,82 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 80
+        Total : 81
         </div>
         <!-- search  -->
         
@@ -2011,6 +2081,11 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/02</span><a class="archive-post-title" href="/2017/07/02/2017-07-02/">使用Electron和JavaScript构建桌面应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2017/05/16/2019-03-16/">将YUV图像渲染到屏幕上（OpenGL）</a>
         </li>
     
     
@@ -2308,12 +2383,12 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
