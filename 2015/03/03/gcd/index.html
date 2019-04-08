@@ -402,15 +402,15 @@ height:50vh;
 <li>Concurrent Dispatch Queue</li>
 </ul>
 <h3 id="Serial-Dispatch-Queue"><a href="#Serial-Dispatch-Queue" class="headerlink" title="Serial Dispatch Queue"></a>Serial Dispatch Queue</h3><p><code>Serial Dispatch Queue</code>:线程池只提供一个线程用来执行任务,任务是串行的.</p>
-<p><img src="/2015/03/03/gcd/~/serial dispatch queue.png" alt=""></p>
+<p><img src="/2015/03/03/gcd/serial dispatch queue.png" alt=""></p>
 <h3 id="Concurrent-Dispatch-Queue"><a href="#Concurrent-Dispatch-Queue" class="headerlink" title="Concurrent Dispatch Queue"></a>Concurrent Dispatch Queue</h3><p><code>Concurrent Dispatch Queue</code>:线程池有多个线程用来执行任务,任务之间是并行的.</p>
-<p><img src="/2015/03/03/gcd/~/concurrent dispatch queue.png" alt=""></p>
+<p><img src="/2015/03/03/gcd/concurrent dispatch queue.png" alt=""></p>
 <h3 id="Dispatch-Group"><a href="#Dispatch-Group" class="headerlink" title="Dispatch Group"></a>Dispatch Group</h3><p>对加入Dispatch Group的线程,使用Dispatch Group可以检测到处理执行的结束.例如可以把数个并行线程加入Dispatch Group,待其全部处理结束后,执行指定的任务.</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> group = dispatch_group_create()</span><br><span class="line"><span class="keyword">var</span> queue = dispatch_queue_create(<span class="string">"dispatch queue"</span>, <span class="type">DISPATCH_QUEUE_CONCURRENT</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">10</span></span><br><span class="line">&#123;</span><br><span class="line">    dispatch_group_async(group, queue, &#123; () -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">        sleep(arc4random_uniform(<span class="number">3</span>))</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">dispatch_group_notify(group, queue) &#123; () -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"finish"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>结果:<br>4<br>5<br>2<br>9<br>8<br>0<br>3<br>1<br>6<br>7<br>finish</p>
 <p>可以用<code>NSBlockOperation</code>的<code>addDependency(op: NSOperation)</code>方法实现相同的功能.</p>
 <h3 id="Dispatch-barrier-async"><a href="#Dispatch-barrier-async" class="headerlink" title="Dispatch barrier async"></a>Dispatch barrier async</h3><p>使用<code>Dispatch barrier async</code>可以避免数据竞争的问题.</p>
-<p><img src="/2015/03/03/gcd/~/dispatch barrier async.png" alt=""></p>
+<p><img src="/2015/03/03/gcd/dispatch barrier async.png" alt=""></p>
 <h3 id="dispatch-sync"><a href="#dispatch-sync" class="headerlink" title="dispatch_sync"></a>dispatch_sync</h3><p>sync指同步,意味着函数等待block被处理完再返回.</p>
 <p><img src="/2015/03/03/gcd/dispatch_sync.png" alt=""></p>
 <p>注意:sync到当前线程会导致死锁.</p>
@@ -571,6 +571,20 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2263,12 +2277,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     
