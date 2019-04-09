@@ -346,6 +346,37 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2017/03/22/2017-03-22/">
+            
+                <span>总结一下让动画保持流畅的几个方法</span>
+        </a>
+        <div class="abstract-content">
+            前言动画的流畅性,是让iPhone俘虏广大果粉的心的一个重要的因素.但是我们在开发iOS APP的时候,却会经常遇到各种动画不能流畅表现的情况.下面将会介绍一些能让APP动画重回流畅的方法.
+CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首先需要了解一段动画在iOS中呈现需要经过哪些步骤.
+从苹果在WWDC 2012中展示的可以看出,一段动画从创建到展示需要经过三个主要的过程:
+
+创建动画并且更新动画层级
+准备并且提交动画
+渲染
+
+在这三个过程中,第一第二个过程是在CPU中被处理的,而第三个过程:渲染,则是由GPU所负责.所以,当我们需要优化动画的流畅性的时候,我们首先需...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/22</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2017/03/13/2017-03-13/">
             
                 <span>漫谈Swift面向协议编程</span>
@@ -564,31 +595,6 @@ isMutually...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/06/07</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2016/06/06/2016-06-06/">
-            
-                <span>YALContextMenu</span>
-        </a>
-        <div class="abstract-content">
-            YALContextMenu
-作为菜单使用的YALContextMenu其实是一个UITableView.
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071- (void)showInView:(UIView *)superview withEdgeInsets:(UIEdgeInsets)edgeInsets animated:(BOOL)animated &#123; ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/06/06</span>
             </div>
             <!-- tags  -->
             
@@ -2015,12 +2021,9 @@ isMutually...
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2033,6 +2036,11 @@ isMutually...
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">

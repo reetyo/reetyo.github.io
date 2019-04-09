@@ -346,6 +346,30 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/04/26/关于user/">
+            
+                <span>关于userdefault返回值的问题</span>
+        </a>
+        <div class="abstract-content">
+            userdefaul的返回值总是不可变的。例如nsmutablearray 即使显式转换成nsmutablearray，但是使用addobject方法会崩溃。解决方式
+1NSMutableArray *loadDefects = [[defaultDefects objectForKey:@&quot;defaultDefects&quot;]mutableCopy];
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/26</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/04/19/自定义类加入userdefault/">
             
                 <span>自定义类加入userdefault</span>
@@ -557,30 +581,6 @@ app....
         <div class="abstract-content">
             1234   NSURLRequest *myRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"theUrlYouWantToAccess"]];   NSURLResponse *responce = nil;   NSError *error;NSData *data = [NSURLConnection sendSynchronousRequest:myRequest returningResponse:responce error:error];
 注意解析json数据的时候，用｛｝围着的是nsdiction...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/03/19</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/03/19/Apple Watch app和iOS的数据通信/">
-            
-                <span>Apple Watch app和iOS的通信</span>
-        </a>
-        <div class="abstract-content">
-            数据通信因为WatchKit extension 和 iOS app分别运行在各自的沙箱环境里，它们的不会共享文档和直接传递数据。所以我们需要一个app group让两个程序共享数据或者user default。
-为iOS app和Watchkit Extension创建一个app group（在developer.apple.com里创建），并选中。使用shared group 的id创建一个 NSUserDefaults对象。 NSUserDefaults 对象的 initWithSuiteName:方法可以创建一个可以访问的user default data 对象。这样两个程序都能...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -2012,12 +2012,9 @@ app....
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2030,6 +2027,11 @@ app....
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">

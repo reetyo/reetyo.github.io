@@ -346,6 +346,30 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/03/19/Apple Watch app和iOS的数据通信/">
+            
+                <span>Apple Watch app和iOS的通信</span>
+        </a>
+        <div class="abstract-content">
+            数据通信因为WatchKit extension 和 iOS app分别运行在各自的沙箱环境里，它们的不会共享文档和直接传递数据。所以我们需要一个app group让两个程序共享数据或者user default。
+为iOS app和Watchkit Extension创建一个app group（在developer.apple.com里创建），并选中。使用shared group 的id创建一个 NSUserDefaults对象。 NSUserDefaults 对象的 initWithSuiteName:方法可以创建一个可以访问的user default data 对象。这样两个程序都能...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/03/19</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/03/18/apple watch界面跳转/">
             
                 <span>apple watch界面导航</span>
@@ -557,30 +581,6 @@ Dispatch QueueDispatch Queue是执行处理的等待队列.Block被追加到Disp
 
 Serial Dispatch Queue
 Concurrent Dispatch Queue...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/03/03</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/03/03/UitableView/">
-            
-                <span>UitableView</span>
-        </a>
-        <div class="abstract-content">
-            UITableView的数据源(dataSource)和代理(delegate)
-UITableView需要一个数据源(dataSource)来显示数据，UITableView会向数据源查询一共有多少行数据以及每一行显示什么数据等。没有设置数据源的UITableView只是个空壳。凡是遵守UITableViewDataSource协议的OC对象，都可以是UITableView的数据源。通常都要为UITableView设置代理对象(delegate)，以便在UITableView触发一下事件时做出相应的处理，比如选中了某一行。凡是遵守了UITableViewDelegate协议的OC对象，...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -2012,12 +2012,9 @@ UITableView需要一个数据源(dataSource)来显示数据，UITableView会向�
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2030,6 +2027,11 @@ UITableView需要一个数据源(dataSource)来显示数据，UITableView会向�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">

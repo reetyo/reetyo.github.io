@@ -346,6 +346,32 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/12/05/2015-12-05/">
+            
+                <span>map,reduce和filter</span>
+        </a>
+        <div class="abstract-content">
+            Mapmap方法的功能是:对数组中的每个元素调用指定的方法,生成一个新的数组并返回.例如,如果一个数组是[1,2,3,4,5,6,7,8,9]并且该指定的方法是f(x)=x^2,那么map()方法完成的功能如下:
+
+Reducereduce方法的效果是reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)就是说先把一个数组的第一,第二个元素作为参数,调用f()方法,把返回值和数组的第三个元素再调用f()方法,一直进行到数组的最后一个元素为止.最后返回一个值.
+Filterfilter方法用于过滤数组,遍历数组元素,把元素作为参数传入判断...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/05</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/12/03/2015-12-03/">
             
                 <span>Pitaya</span>
@@ -594,35 +620,6 @@ swift中的浅复制和深复制的情况在swift中,一个对象直接用等号
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/18</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/10/10/2015-12-08/">
-            
-                <span>(Objective-C)@property后的关键字</span>
-        </a>
-        <div class="abstract-content">
-            setter相关修饰符copycopy关键字常用于NSString、NSArray、NSDictionary.这些类有两个特点:
-
-不可变(immutable)
-遵守了NSCopying协议如果在赋值的时候希望对象是被复制一份而不是指向同一个对象那么就需要添加copy关键字
-
-copy 关键字会影响setter方法:
-1234567- (void)setName:(NSString *)newName &#123;     if (name != newName) &#123;        [name release];        name = [newName copy];   ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/10</span>
             </div>
             <!-- tags  -->
             
@@ -2049,12 +2046,9 @@ copy 关键字会影响setter方法:
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2067,6 +2061,11 @@ copy 关键字会影响setter方法:
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">

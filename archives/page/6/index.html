@@ -346,6 +346,35 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/10/10/2015-12-08/">
+            
+                <span>(Objective-C)@property后的关键字</span>
+        </a>
+        <div class="abstract-content">
+            setter相关修饰符copycopy关键字常用于NSString、NSArray、NSDictionary.这些类有两个特点:
+
+不可变(immutable)
+遵守了NSCopying协议如果在赋值的时候希望对象是被复制一份而不是指向同一个对象那么就需要添加copy关键字
+
+copy 关键字会影响setter方法:
+1234567- (void)setName:(NSString *)newName &#123;     if (name != newName) &#123;        [name release];        name = [newName copy];   ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/10</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/10/07/swift/">
             
                 <span>swift中的指针</span>
@@ -570,30 +599,6 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
         <div class="abstract-content">
             UIImage没有实现encodeWithCoder。
 12aCoder.encodeObject(UIImagePNGRepresentation(self.image), forKey: &quot;image&quot;)self.image = UIImage(data: aDecoder.decodeObjectForKey(&quot;image&quot;) as! NSData )
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/26</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/26/关于user/">
-            
-                <span>关于userdefault返回值的问题</span>
-        </a>
-        <div class="abstract-content">
-            userdefaul的返回值总是不可变的。例如nsmutablearray 即使显式转换成nsmutablearray，但是使用addobject方法会崩溃。解决方式
-1NSMutableArray *loadDefects = [[defaultDefects objectForKey:@&quot;defaultDefects&quot;]mutableCopy];
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -2025,12 +2030,9 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2043,6 +2045,11 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">

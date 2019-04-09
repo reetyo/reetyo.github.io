@@ -357,6 +357,30 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/04/09/2019-04-09/">
+            
+                <span>关于 usbmuxd 的一点研究</span>
+        </a>
+        <div class="abstract-content">
+            usbmux 与 usbmuxd当 iTunes 和 iPhone 连接时，它们之间会通过 usbmux 进行连接。usbmux 用于在 USB 协议上实现多路 TCP 连接，将 USB 通信抽象为 TCP 通信。苹果的 iTunes , XCode 都使用了这个服务。
+根据 iphonewiki.com 所说的，usbmuxd 的程序存放在 Mac 系统下的 /System/Library/PrivateFrameworks/MobileDevice.framework/Resources路径中。并且由 plist 文件 /System/Library/LaunchDaemons/co...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/09</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/02/18/2019-02-18/">
             
                 <span>在 Flutter 中使用多 Isolate</span>
@@ -577,37 +601,6 @@ iOS 上的 OpenGLiOS 使用的是 OpenGL ES，这是 OpenGL 在移动端上的�
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/17</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2017/03/22/2017-03-22/">
-            
-                <span>总结一下让动画保持流畅的几个方法</span>
-        </a>
-        <div class="abstract-content">
-            前言动画的流畅性,是让iPhone俘虏广大果粉的心的一个重要的因素.但是我们在开发iOS APP的时候,却会经常遇到各种动画不能流畅表现的情况.下面将会介绍一些能让APP动画重回流畅的方法.
-CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首先需要了解一段动画在iOS中呈现需要经过哪些步骤.
-从苹果在WWDC 2012中展示的可以看出,一段动画从创建到展示需要经过三个主要的过程:
-
-创建动画并且更新动画层级
-准备并且提交动画
-渲染
-
-在这三个过程中,第一第二个过程是在CPU中被处理的,而第三个过程:渲染,则是由GPU所负责.所以,当我们需要优化动画的流畅性的时候,我们首先需...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/22</span>
             </div>
             <!-- tags  -->
             
@@ -2108,12 +2101,9 @@ CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首�
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2126,6 +2116,11 @@ CPU和GPU,哪一块才是短板?为了更好的实现动画的优化,我们首�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">

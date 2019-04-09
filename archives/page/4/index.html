@@ -346,6 +346,32 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2016/02/27/2016-02-27/">
+            
+                <span>关于face API</span>
+        </a>
+        <div class="abstract-content">
+            face API是微软开发的人脸识别API.有人脸侦测,查找相似,分组,辨认,核对等功能.https://dev.projectoxford.ai/
+侦测用POST方法进行请求.对于非本地图片,Request headers的Content-Type字段为application/json,Requset body为json格式:
+123&#123;    "url":"http://example.com/1.jpg"&#125;
+对于本地图片,Request headers的Content-Type字段为application/octet-stream,Requset body为图片的...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/02/27</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2016/02/24/2016-02-24-1/">
             
                 <span>NSNotification</span>
@@ -581,32 +607,6 @@ Core Data的简单示例使用Core Data的基本流程是:
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/06</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/12/05/2015-12-05/">
-            
-                <span>map,reduce和filter</span>
-        </a>
-        <div class="abstract-content">
-            Mapmap方法的功能是:对数组中的每个元素调用指定的方法,生成一个新的数组并返回.例如,如果一个数组是[1,2,3,4,5,6,7,8,9]并且该指定的方法是f(x)=x^2,那么map()方法完成的功能如下:
-
-Reducereduce方法的效果是reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)就是说先把一个数组的第一,第二个元素作为参数,调用f()方法,把返回值和数组的第三个元素再调用f()方法,一直进行到数组的最后一个元素为止.最后返回一个值.
-Filterfilter方法用于过滤数组,遍历数组元素,把元素作为参数传入判断...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/05</span>
             </div>
             <!-- tags  -->
             
@@ -2033,12 +2033,9 @@ Filterfilter方法用于过滤数组,遍历数组元素,把元素作为参数传
     
     
     
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2051,6 +2048,11 @@ Filterfilter方法用于过滤数组,遍历数组元素,把元素作为参数传
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href="/2019/04/09/2019-04-09/">关于 usbmuxd 的一点研究</a>
+        </li>
     
     
         <li class="archive-post-item">
