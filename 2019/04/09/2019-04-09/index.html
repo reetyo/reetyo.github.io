@@ -396,7 +396,7 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h1 id="usbmux-与-usbmuxd"><a href="#usbmux-与-usbmuxd" class="headerlink" title="usbmux 与 usbmuxd"></a>usbmux 与 usbmuxd</h1><p>当 iTunes 和 iPhone 连接时，它们之间会通过 usbmux 进行连接。usbmux 用于在 USB 协议上实现多路 TCP 连接，将 USB 通信抽象为 TCP 通信。苹果的 iTunes , XCode 都使用了这个服务。</p>
-<p>根据 <a href="&#39;https://www.theiphonewiki.com/wiki/Usbmux&#39;">iphonewiki.com</a> 所说的，usbmuxd 的程序存放在 Mac 系统下的 <code>/System/Library/PrivateFrameworks/MobileDevice.framework/Resources</code>路径中。并且由 plist 文件 <code>/System/Library/LaunchDaemons/com.apple.usbmuxd.plist</code> 可知，usbmux 是一个开机启动的服务。</p>
+<p>根据 <a href="https://www.theiphonewiki.com/wiki/Usbmux" target="_blank" rel="noopener">iphonewiki.com</a> 所说的，usbmuxd 的程序存放在 Mac 系统下的 <code>/System/Library/PrivateFrameworks/MobileDevice.framework/Resources</code>路径中。并且由 plist 文件 <code>/System/Library/LaunchDaemons/com.apple.usbmuxd.plist</code> 可知，usbmux 是一个开机启动的服务。</p>
 <p><img src="/2019/04/09/2019-04-09/Snipaste_2019-04-09_23-59-32.png" alt=""></p>
 <p>github 上也存在一个名为 usbmuxd 的项目，这是一个跨平台的开源项目，实现了 usbmux 的功能，支持 MAC/Linux/Windows 平台。</p>
 <h1 id="usbmuxd连接流程"><a href="#usbmuxd连接流程" class="headerlink" title="usbmuxd连接流程"></a>usbmuxd连接流程</h1><p>以下是应用程序与 usbmuxd 的连接流程。</p>
@@ -407,11 +407,11 @@ height:50vh;
 <li>usbmuxd 的广播包使用自己的一套协议，需要按照该协议生成数据包来和 usbmuxd 进行数据传输。</li>
 <li>当应用程序与 iOS 设备连接后，应用程序和 iOS 进行数据传输的协议由我们自己决定。</li>
 </ol>
-<h1 id="peertalk"><a href="#peertalk" class="headerlink" title="peertalk"></a>peertalk</h1><p><a href="&#39;https://github.com/rsms/peertalk&#39;">peertalk</a>是一个使用了 usbmuxd 的实例程序，实现了 iOS 设备和 Mac 通讯的功能。</p>
-<p><a href="&#39;https://github.com/reetyo/usbmuxdTest&#39;">这个工程</a>是我对 peertalk Mac 版本的一个简化，代码量较少，能比较清楚地看出 Mac 应用是如何通过 usbmuxd 与 iOS 设备通讯的。</p>
+<h1 id="peertalk"><a href="#peertalk" class="headerlink" title="peertalk"></a>peertalk</h1><p><a href="https://github.com/rsms/peertalk" target="_blank" rel="noopener">peertalk</a>是一个使用了 usbmuxd 的实例程序，实现了 iOS 设备和 Mac 通讯的功能。</p>
+<p><a href="https://github.com/reetyo/usbmuxdTest" target="_blank" rel="noopener">这个工程</a>是我对 peertalk Mac 版本的一个简化，代码量较少，能比较清楚地看出 Mac 应用是如何通过 usbmuxd 与 iOS 设备通讯的。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="&#39;https://medium.com/@jon.gabilondo.angulo_7635/understanding-usbmux-and-the-ios-lockdown-service-7f2a1dfd07ae&#39;">Understanding usbmux and the iOS lockdown service</a></li>
-<li><a href="&#39;http://bbs.iosre.com/t/usbmuxd-idevice-usb/1482&#39;">什么是usbmuxd? iDevice通过USB与桌面系统通信原理小科普</a></li>
+<li><a href="https://medium.com/@jon.gabilondo.angulo_7635/understanding-usbmux-and-the-ios-lockdown-service-7f2a1dfd07ae" target="_blank" rel="noopener">Understanding usbmux and the iOS lockdown service</a></li>
+<li><a href="http://bbs.iosre.com/t/usbmuxd-idevice-usb/1482" target="_blank" rel="noopener">什么是usbmuxd? iDevice通过USB与桌面系统通信原理小科普</a></li>
 </ol>
 
     </article>
@@ -563,22 +563,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -2107,12 +2091,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27/">关于face API</a>
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href="/2016/02/27/2016-02-27-1/">block和delegate作为回调</a>
         </li>
     
     
