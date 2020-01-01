@@ -346,6 +346,30 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2016/06/07/2016-06-07/">
+            
+                <span>使用CADisplayLink观察动画</span>
+        </a>
+        <div class="abstract-content">
+            我们经常使用CABasicAnimation实现动画效果,如果要观察动画实现时候的值,应该怎么实现呢?1.使用KVO,提示被观察者在observer被释放之前就释放了.2.使用NSTimer,NSTimer有间隔不稳定的问题.3.使用CADisplayLinkCADisplayLink是一个定时器.和NSTimer不同的是,它是和屏幕的刷新率相同的,比较准确.
+12345678910111213141516171819var animation = CASpringAnimation()        animation.keyPath = "position.y"        ani...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/06/07</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2016/06/06/2016-06-06/">
             
                 <span>YALContextMenu</span>
@@ -566,30 +590,6 @@ AVCapture...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/02/29</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2016/02/27/2016-02-27-1/">
-            
-                <span>block和delegate作为回调</span>
-        </a>
-        <div class="abstract-content">
-            http://blog.stablekernel.com/blocks-or-delegates/block和delegate,究竟什么时候选择哪种方式作为回调呢?当遇到这样的问题时,或许最好的答案是参考Apple的做法.找出Apple在什么情况下使用delegate十分简单:在文档中搜寻delegate,然后我们会找到大部分使用了delegate的类.
-相对而言,找出Apple在什么情况下使用了block的难度会大一点,因为我们不能再文档中寻找^符号.然而,Apple在遵守命名规则这方面做得很好.例如,一个将NSString类型的对象作为参数的方法的名字中会出现”String”,就像i...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/02/27</span>
             </div>
             <!-- tags  -->
             
@@ -2020,9 +2020,114 @@ AVCapture...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 82
+        Total : 83
         </div>
         <!-- search  -->
         
@@ -2032,6 +2137,20 @@ AVCapture...
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href="/2020/01/01/2020-01-01/">iOS 播放 H265 Elementary Stream</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">

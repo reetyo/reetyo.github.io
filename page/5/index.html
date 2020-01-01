@@ -357,6 +357,30 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/12/06/2015-12-06/">
+            
+                <span>NSOperation和NSOperationQueue</span>
+        </a>
+        <div class="abstract-content">
+            简介NSOperation和NSOperationQueue是GCD的封装.NSOperation和NSOperationQueue对应的分别是GCD中的任务和队列.
+特性对比GCD,NSOperation提供了一些新的特性,例如取消队列中的任务,这在一些场景下将会大大减少cpu的运算量.试想一下你要实现一个下载大量图片并在UICollectionView中展示的应用,一般情况下是当用户滑动UICollectionView到达了一定地方的时候,新的图片将会被下载以填充即将要展示的view.那么当用户快速滑过UIConnectionView的时候,很多view已经被滑出屏幕但是加载当中的图...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/06</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/12/05/2015-12-05/">
             
                 <span>map,reduce和filter</span>
@@ -598,34 +622,6 @@ swift中的浅复制和深复制的情况在swift中,一个对象直接用等号
         <div class="abstract-content">
             有时在写函数时会发生函数名和oc的selector中的某个函数名冲突的问题，原因是对于每个属性，oc都创建了一个形如setName:的函数。这时候，可以使用swift的属性观察器实现相同的功能。
 
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/18</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/10/18/swift 2.0的错误处理/">
-            
-                <span>swift 2.0的异常处理</span>
-        </a>
-        <div class="abstract-content">
-            可以用enum类型建立自定义的错误类型：
-1234enum MyError: ErrorType &#123;    case NotExist  case StartWithWrongLetter&#125;
-定义抛出异常的函数：
-12345func handleString(String : String) throws -&gt; String&#123;    //code    throw MyError.NotExist&#125;
-捕捉异常
-1234do&#123;    try // function that throws&#125;catch MyError.NotE...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -2135,9 +2131,114 @@ swift中的浅复制和深复制的情况在swift中,一个对象直接用等号
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 82
+        Total : 83
         </div>
         <!-- search  -->
         
@@ -2147,6 +2248,20 @@ swift中的浅复制和深复制的情况在swift中,一个对象直接用等号
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href="/2020/01/01/2020-01-01/">iOS 播放 H265 Elementary Stream</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">

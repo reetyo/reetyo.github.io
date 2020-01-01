@@ -346,6 +346,34 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/10/18/swift 2.0的错误处理/">
+            
+                <span>swift 2.0的异常处理</span>
+        </a>
+        <div class="abstract-content">
+            可以用enum类型建立自定义的错误类型：
+1234enum MyError: ErrorType &#123;    case NotExist  case StartWithWrongLetter&#125;
+定义抛出异常的函数：
+12345func handleString(String : String) throws -&gt; String&#123;    //code    throw MyError.NotExist&#125;
+捕捉异常
+1234do&#123;    try // function that throws&#125;catch MyError.NotE...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/10/18</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/10/10/2015-12-08/">
             
                 <span>(Objective-C)@property后的关键字</span>
@@ -580,30 +608,6 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/05/02</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/04/26/UIImage encode/">
-            
-                <span>UIImage encode的问题</span>
-        </a>
-        <div class="abstract-content">
-            UIImage没有实现encodeWithCoder。
-12aCoder.encodeObject(UIImagePNGRepresentation(self.image), forKey: &quot;image&quot;)self.image = UIImage(data: aDecoder.decodeObjectForKey(&quot;image&quot;) as! NSData )
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/04/26</span>
             </div>
             <!-- tags  -->
             
@@ -2034,9 +2038,114 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 82
+        Total : 83
         </div>
         <!-- search  -->
         
@@ -2046,6 +2155,20 @@ swift的单例模式由于swift1.2之后支持了类储存属性，可以使用�
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href="/2020/01/01/2020-01-01/">iOS 播放 H265 Elementary Stream</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
