@@ -357,6 +357,33 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2016/02/29/2016-02-29/">
+            
+                <span>旋转UIImage</span>
+        </a>
+        <div class="abstract-content">
+            创建一个UIImage可以使用以下方法:
+1- initWithCGImage:scale:orientation:
+这个方法看起来可以对图片进行旋转,但是这个方法实际上是创建一个传入的CGImage的拷贝,并且把CGImage的imageFlags属性里的imageOrientation改变了.所以对一些无视这个flag的类,例如UIActivityViewController,使用这个方法将得不到正确的效果.处理后的图片在使用某些软件加载的时候也会没有效果.
+所以,下面介绍一个从像素上旋转图片的方法:
+1234567891011121314151617181920func rotat...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/02/29</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2016/02/27/2016-02-27-1/">
             
                 <span>block和delegate作为回调</span>
@@ -587,37 +614,6 @@ bounds官...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/29</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/12/12/2015-12-12/">
-            
-                <span>学习Core Data</span>
-        </a>
-        <div class="abstract-content">
-            简介Core Data 是一种持久化技术,它能够将模型对象的状态持久化到磁盘.
-Core Data的简单示例使用Core Data的基本流程是:
-
-创建Entity,指定其名称
-为Entity添加Attributes,指定其名称和数据类型.
-储存managed object.
-取得managed object.
-
-1234567891011121314151617181920//储存person        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate              ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/12/12</span>
             </div>
             <!-- tags  -->
             
@@ -2099,9 +2095,56 @@ Core Data的简单示例使用Core Data的基本流程是:
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 83
+        Total : 84
         </div>
         <!-- search  -->
         
@@ -2111,6 +2154,20 @@ Core Data的简单示例使用Core Data的基本流程是:
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href="/2020/07/24/2020-07-24/">在深圳工作这几年</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
@@ -2478,12 +2535,12 @@ Core Data的简单示例使用Core Data的基本流程是:
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     

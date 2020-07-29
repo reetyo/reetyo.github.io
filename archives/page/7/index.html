@@ -346,6 +346,32 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/05/02/AVPlayer 后台播放/">
+            
+                <span>AVPlayer 后台播放</span>
+        </a>
+        <div class="abstract-content">
+            在plist中添加Required background modes，然后在appdelegate中加入
+1[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+参考：http://stackoverflow.com/questions/4771105/how-do-i-get-my-avplayer-to-play-while-app-is-in-background
+
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/05/02</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/04/26/UIImage encode/">
             
                 <span>UIImage encode的问题</span>
@@ -548,39 +574,6 @@
         <div class="abstract-content">
             http://www.cocoachina.com/bbs/read.php?tid=260065
 OpenURL是你通过打开一个url的方式打开其它的应用或链接，handleOpenURL是其它应用通过调用你的app中设置的URL scheme打开你的应用。如果你使用过第三方分享SDK，你应该知道需要在AppDelegate中实现handleOpenURL方法，例如微信的分享，你在你的app中点击了分享，就会跳转到微信，这就是一个openURL的过程调起第三方应用，如果你分享成功或者取消分享返回到自己的app，这时你AppDelegate中的handleOpenURL的方法就会被调用，...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/03/22</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2015/03/22/ui/">
-            
-                <span>（转）UIApplication 总结</span>
-        </a>
-        <div class="abstract-content">
-            http://mobile.51cto.com/hot-442120.htm
-1.简介
-1&gt; 整个应用程序的象征，一个应用程序就一个UIApplication对象，使用了单例设计模式
-2&gt; 通过[UIApplication sharedApplication]访问这个单例对象
-2.常见用法
-1&gt; 设置图标右上角的红色提示数字
-app.applicationIconBadgeNumber = 10;
-2&gt; 设置状态栏的样式
-app.statusBarStyle = UIStatusBarStyleBlackOpaque;
-3&gt; 控制状态栏的显示和隐藏
-app....
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1993,9 +1986,56 @@ app....
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 83
+        Total : 84
         </div>
         <!-- search  -->
         
@@ -2005,6 +2045,20 @@ app....
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href="/2020/07/24/2020-07-24/">在深圳工作这几年</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
@@ -2372,12 +2426,12 @@ app....
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     

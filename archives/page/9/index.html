@@ -346,6 +346,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2015/03/04/UITableViewController setDataController：unrecognized selector sent to instance/">
+            
+                <span>UITableViewController setDataController：unrecognized selector sent to instance</span>
+        </a>
+        <div class="abstract-content">
+            原因是把UITableViewController嵌入UINavigationController后，
+1UITableViewController *dc = [segue destinationViewController];
+没有更改，更改后：
+1UINavigationController *dc = [segue destinationViewController];
+用
+1DetailViewController *DetaiView = [dc topViewController];
+取得UITableViewController
+
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2015/03/04</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2015/03/03/gcd/">
             
                 <span>GCD</span>
@@ -1815,9 +1845,56 @@ UITableView需要一个数据源(dataSource)来显示数据，UITableView会向�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 83
+        Total : 84
         </div>
         <!-- search  -->
         
@@ -1827,6 +1904,20 @@ UITableView需要一个数据源(dataSource)来显示数据，UITableView会向�
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href="/2020/07/24/2020-07-24/">在深圳工作这几年</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
@@ -2194,12 +2285,12 @@ UITableView需要一个数据源(dataSource)来显示数据，UITableView会向�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/NSString NSURL中的isEqual和==/">(转）NSString NSURL中的isEqual和==</a>
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href="/2015/03/28/创建一个全局的av/">创建一个全局的avplayer</a>
         </li>
     
     
